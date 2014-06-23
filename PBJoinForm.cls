@@ -13,7 +13,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Public PartnerID       As String
+Public LinkID          As String
 Public CorpNum         As String
 Public CEOName         As String
 Public CorpName        As String

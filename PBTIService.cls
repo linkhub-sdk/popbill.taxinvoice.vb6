@@ -116,10 +116,10 @@ Public Property Let IsTest(ByVal value As Boolean)
     m_IsTest = value
 End Property
 '초기화
-Public Sub Initialize(PartnerID As String, SecretKey As String)
+Public Sub Initialize(LinkID As String, SecretKey As String)
     Set m_Linkhub = New Linkhub
     
-    m_Linkhub.PartnerID = PartnerID
+    m_Linkhub.LinkID = LinkID
     m_Linkhub.SercetKey = SecretKey
     
     m_scope.Add "member"
@@ -175,14 +175,14 @@ Private Function httpGET(url As String, BearerToken As String, Optional UserID A
     winhttp1.Send
     winhttp1.WaitForResponse
     
-    Dim response As String
-    response = winhttp1.responseText
+    Dim Response As String
+    Response = winhttp1.responseText
        
     Dim parsedDic As Object
     
     If winhttp1.Status <> 200 Then
     
-        Set parsedDic = m_Linkhub.parse(response)
+        Set parsedDic = m_Linkhub.parse(Response)
         
         Err.Raise parsedDic.Item("code"), "POPBILL", parsedDic.Item("message")
         
@@ -192,16 +192,16 @@ Private Function httpGET(url As String, BearerToken As String, Optional UserID A
     
     Set winhttp1 = Nothing
     
-    Set httpGET = m_Linkhub.parse(response)
+    Set httpGET = m_Linkhub.parse(Response)
 
 End Function
 
-Private Function httpPOST(url As String, BearerToken As String, postData As String, Optional UserID As String) As Variant
-    Set httpPOST = httpPOST_override(url, BearerToken, "", postData, UserID)
+Private Function httpPOST(url As String, BearerToken As String, postdata As String, Optional UserID As String) As Variant
+    Set httpPOST = httpPOST_override(url, BearerToken, "", postdata, UserID)
     
 End Function
 
-Private Function httpPOST_override(url As String, BearerToken As String, override As String, postData As String, Optional UserID As String) As Variant
+Private Function httpPOST_override(url As String, BearerToken As String, override As String, postdata As String, Optional UserID As String) As Variant
      
     Dim winhttp1
     
@@ -224,17 +224,17 @@ Private Function httpPOST_override(url As String, BearerToken As String, overrid
     
     Call winhttp1.setRequestHeader("Content-Type", "Application/json")
     
-    winhttp1.Send (postData)
+    winhttp1.Send (postdata)
     winhttp1.WaitForResponse
     
-    Dim response As String
-    response = winhttp1.responseText
+    Dim Response As String
+    Response = winhttp1.responseText
        
     Dim parsedDic As Object
     
     If winhttp1.Status <> 200 Then
     
-        Set parsedDic = m_Linkhub.parse(response)
+        Set parsedDic = m_Linkhub.parse(Response)
         
         Err.Raise parsedDic.Item("code"), "POPBILL", IIf(IsNull(parsedDic.Item("message")), "Null Exception", parsedDic.Item("message"))
         
@@ -244,7 +244,7 @@ Private Function httpPOST_override(url As String, BearerToken As String, overrid
     
     Set winhttp1 = Nothing
     
-    Set httpPOST_override = m_Linkhub.parse(response)
+    Set httpPOST_override = m_Linkhub.parse(Response)
 
 End Function
 
@@ -256,7 +256,7 @@ Private Function GetOnlyFileName(ByVal FilePath As String) As String
 
 End Function
 
-Private Function httpPOST_File(url As String, BearerToken As String, postData As String, FilePath As String, Optional UserID As String) As Variant
+Private Function httpPOST_File(url As String, BearerToken As String, postdata As String, FilePath As String, Optional UserID As String) As Variant
      
     Dim winhttp1
     Dim boundary As String
@@ -278,7 +278,7 @@ Private Function httpPOST_File(url As String, BearerToken As String, postData As
     Call winhttp1.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary)
     
     
-    If postData <> "" Then
+    If postdata <> "" Then
         'TODO 첨부전문 구성.
     
     End If
@@ -316,14 +316,14 @@ Private Function httpPOST_File(url As String, BearerToken As String, postData As
     winhttp1.Send (Buffer)
     winhttp1.WaitForResponse
     
-    Dim response As String
-    response = winhttp1.responseText
+    Dim Response As String
+    Response = winhttp1.responseText
        
     Dim parsedDic As Object
     
     If winhttp1.Status <> 200 Then
     
-        Set parsedDic = m_Linkhub.parse(response)
+        Set parsedDic = m_Linkhub.parse(Response)
         
         Err.Raise parsedDic.Item("code"), "POPBILL", IIf(IsNull(parsedDic.Item("message")), "Null Exception", parsedDic.Item("message"))
         
@@ -333,7 +333,7 @@ Private Function httpPOST_File(url As String, BearerToken As String, postData As
     
     Set winhttp1 = Nothing
     
-    Set httpPOST_File = m_Linkhub.parse(response)
+    Set httpPOST_File = m_Linkhub.parse(Response)
 
 End Function
 '회원잔액조회
@@ -375,11 +375,11 @@ ErrHandler:
     GetPopbillURL = ""
 End Function
 '회원가입 여부
-Public Function CheckIsMember(CorpNum As String, PartnerID As String) As PBResponse
+Public Function CheckIsMember(CorpNum As String, LinkID As String) As PBResponse
 On Error GoTo ErrHandler
     Dim result As Variant
     
-    Set result = httpGET("/Join?CorpNum=" + CorpNum + "&PID=" + PartnerID, "")
+    Set result = httpGET("/Join?CorpNum=" + CorpNum + "&LID=" + LinkID, "")
     
     Set CheckIsMember = New PBResponse
     CheckIsMember.code = result.Item("code")
@@ -395,12 +395,12 @@ Public Function JoinMember(JoinInfo As PBJoinForm) As PBResponse
 On Error GoTo ErrHandler
     Set JoinMember = Nothing
     
-    Dim postData As String
+    Dim postdata As String
     Dim tmp
     
     Set tmp = CreateObject("Scripting.Dictionary")
     
-    tmp.Add "PartnerID", JoinInfo.PartnerID
+    tmp.Add "LinkID", JoinInfo.LinkID
     tmp.Add "CorpNum", JoinInfo.CorpNum
     tmp.Add "CorpName", JoinInfo.CorpName
     tmp.Add "CEOName", JoinInfo.CEOName
@@ -408,7 +408,7 @@ On Error GoTo ErrHandler
     tmp.Add "ZipCode", JoinInfo.ZipCode
     tmp.Add "BizClass", JoinInfo.BizClass
     tmp.Add "BizType", JoinInfo.BizType
-    tmp.Add "ContactName", JoinInfo.contactName
+    tmp.Add "ContactName", JoinInfo.ContactName
     tmp.Add "ContactEmail", JoinInfo.ContactEmail
     tmp.Add "ContactFAX", JoinInfo.ContactFAX
     tmp.Add "ContactHP", JoinInfo.ContactHP
@@ -416,11 +416,11 @@ On Error GoTo ErrHandler
     tmp.Add "ID", JoinInfo.ID
     tmp.Add "PWD", JoinInfo.PWD
     
-    postData = m_Linkhub.toString(tmp)
+    postdata = m_Linkhub.toString(tmp)
     
     Dim result As Variant
     
-    Set result = httpPOST("/Join", "", postData)
+    Set result = httpPOST("/Join", "", postdata)
     
     JoinMember = New PBResponse
     
@@ -518,11 +518,11 @@ Public Function Register(CorpNum As String, Taxinvoice As PBTaxinvoice, Optional
         tmpDic.Add "writeSpecification", True
     End If
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = m_Linkhub.toString(tmpDic)
+    postdata = m_Linkhub.toString(tmpDic)
     
-    Set result = httpPOST("/Taxinvoice", getSession_token(CorpNum), postData, UserID)
+    Set result = httpPOST("/Taxinvoice", getSession_token(CorpNum), postdata, UserID)
     
     Set Register = New PBResponse
     
@@ -555,14 +555,14 @@ On Error GoTo ErrHandler
         tmpDic.Add "writeSpecification", True
     End If
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = m_Linkhub.toString(tmpDic)
+    postdata = m_Linkhub.toString(tmpDic)
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
                                     getSession_token(CorpNum), _
                                     "PATCH", _
-                                    postData, _
+                                    postdata, _
                                     UserID)
     
     Set Update = New PBResponse
@@ -615,7 +615,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     Dim tmp As Variant
     Set tmp = CreateObject("Scripting.Dictionary")
     
@@ -628,9 +628,9 @@ On Error GoTo ErrHandler
         tmp.Add "forceIssue", True
     End If
     
-    postData = m_Linkhub.toString(tmp)
+    postdata = m_Linkhub.toString(tmp)
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum), "ISSUE", postData, UserID)
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum), "ISSUE", postdata, UserID)
     
     Set Issue = New PBResponse
     
@@ -655,11 +655,11 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = "{""memo"":""" + Memo + """}"
+    postdata = "{""memo"":""" + Memo + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum), "SEND", postData, UserID)
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum), "SEND", postdata, UserID)
     
     Set Send = New PBResponse
     
@@ -684,12 +684,12 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = "{""memo"":""" + Memo + """}"
+    postdata = "{""memo"":""" + Memo + """}"
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "CANCELSEND", postData, UserID)
+                                getSession_token(CorpNum), "CANCELSEND", postdata, UserID)
     
     Set CancelSend = New PBResponse
     
@@ -714,12 +714,12 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = "{""memo"":""" + Memo + """}"
+    postdata = "{""memo"":""" + Memo + """}"
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "ACCEPT", postData, UserID)
+                                getSession_token(CorpNum), "ACCEPT", postdata, UserID)
     
     Set Accept = New PBResponse
     
@@ -744,12 +744,12 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = "{""memo"":""" + Memo + """}"
+    postdata = "{""memo"":""" + Memo + """}"
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "DENY", postData, UserID)
+                                getSession_token(CorpNum), "DENY", postdata, UserID)
     
     Set Deny = New PBResponse
     
@@ -774,12 +774,12 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = "{""memo"":""" + Memo + """}"
+    postdata = "{""memo"":""" + Memo + """}"
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "CANCELISSUE", postData, UserID)
+                                getSession_token(CorpNum), "CANCELISSUE", postdata, UserID)
     
     Set CancelIssue = New PBResponse
     
@@ -804,12 +804,12 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = "{""memo"":""" + Memo + """}"
+    postdata = "{""memo"":""" + Memo + """}"
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "REQUEST", postData, UserID)
+                                getSession_token(CorpNum), "REQUEST", postdata, UserID)
     
     Set Request = New PBResponse
     
@@ -834,12 +834,12 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = "{""memo"":""" + Memo + """}"
+    postdata = "{""memo"":""" + Memo + """}"
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "CANCELREQUEST", postData, UserID)
+                                getSession_token(CorpNum), "CANCELREQUEST", postdata, UserID)
     
     Set CancelRequest = New PBResponse
     
@@ -864,12 +864,12 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = "{""memo"":""" + Memo + """}"
+    postdata = "{""memo"":""" + Memo + """}"
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "REFUSE", postData, UserID)
+                                getSession_token(CorpNum), "REFUSE", postdata, UserID)
     
     Set Refuse = New PBResponse
     
@@ -921,12 +921,12 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = "{""receiver"":""" + Receiver + """}"
+    postdata = "{""receiver"":""" + Receiver + """}"
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "EMAIL", postData, UserID)
+                                getSession_token(CorpNum), "EMAIL", postdata, UserID)
     
     Set SendEmail = New PBResponse
     
@@ -951,7 +951,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
     Dim t As Variant
     
@@ -961,10 +961,10 @@ On Error GoTo ErrHandler
     t.Add "sender", Sender
     t.Add "contents", Contents
     
-    postData = m_Linkhub.toString(t)
+    postdata = m_Linkhub.toString(t)
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "SMS", postData, UserID)
+                                getSession_token(CorpNum), "SMS", postdata, UserID)
     
     Set SendSMS = New PBResponse
     
@@ -989,7 +989,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Dim postData As String
+    Dim postdata As String
     
     Dim t As Variant
     
@@ -998,10 +998,10 @@ On Error GoTo ErrHandler
     t.Add "receiver", Receiver
     t.Add "sender", Sender
     
-    postData = m_Linkhub.toString(t)
+    postdata = m_Linkhub.toString(t)
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
-                                getSession_token(CorpNum), "FAX", postData, UserID)
+                                getSession_token(CorpNum), "FAX", postdata, UserID)
     
     Set SendFax = New PBResponse
     
@@ -1052,14 +1052,14 @@ On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = m_Linkhub.toString(MgtKeyList)
+    postdata = m_Linkhub.toString(MgtKeyList)
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
     Set result = httpPOST("/Taxinvoice/" + strKeyType, _
-                                getSession_token(CorpNum), postData, UserID)
+                                getSession_token(CorpNum), postdata, UserID)
     
     Set GetInfos = New Collection
     
@@ -1186,14 +1186,14 @@ On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
     
-    Dim postData As String
+    Dim postdata As String
     
-    postData = m_Linkhub.toString(MgtKeyList)
+    postdata = m_Linkhub.toString(MgtKeyList)
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
     Set result = httpPOST("/Taxinvoice/" + strKeyType + "?Print", _
-                                getSession_token(CorpNum), postData, UserID)
+                                getSession_token(CorpNum), postdata, UserID)
     
     GetMassPrintURL = result.Item("url")
     
