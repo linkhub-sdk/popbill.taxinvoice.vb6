@@ -176,6 +176,10 @@ Public Function toDictionary() As Variant
     toDictionary.Add "bankBookYN", bankBookYN
     toDictionary.Add "faxsendYN", faxsendYN
     
+    toDictionary.Add "remark1", remark1
+    toDictionary.Add "remark2", remark2
+    toDictionary.Add "remark3", remark3
+    
     toDictionary.Add "faxreceiveNum", faxreceiveNum
     toDictionary.Add "ntsconfirmNum", ntsconfirmNum
     toDictionary.Add "originalTaxinvoiceKey", originalTaxinvoiceKey
