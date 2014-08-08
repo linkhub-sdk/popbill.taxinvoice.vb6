@@ -116,10 +116,10 @@ Public Property Let IsTest(ByVal value As Boolean)
     m_IsTest = value
 End Property
 '초기화
-Public Sub Initialize(LinkID As String, SecretKey As String)
+Public Sub Initialize(linkID As String, SecretKey As String)
     Set m_Linkhub = New Linkhub
     
-    m_Linkhub.LinkID = LinkID
+    m_Linkhub.linkID = linkID
     m_Linkhub.SercetKey = SecretKey
     
     m_scope.Add "member"
@@ -375,11 +375,11 @@ ErrHandler:
     GetPopbillURL = ""
 End Function
 '회원가입 여부
-Public Function CheckIsMember(CorpNum As String, LinkID As String) As PBResponse
+Public Function CheckIsMember(CorpNum As String, linkID As String) As PBResponse
 On Error GoTo ErrHandler
     Dim result As Variant
     
-    Set result = httpGET("/Join?CorpNum=" + CorpNum + "&LID=" + LinkID, "")
+    Set result = httpGET("/Join?CorpNum=" + CorpNum + "&LID=" + linkID, "")
     
     Set CheckIsMember = New PBResponse
     CheckIsMember.code = result.Item("code")
@@ -400,7 +400,7 @@ On Error GoTo ErrHandler
     
     Set tmp = CreateObject("Scripting.Dictionary")
     
-    tmp.Add "LinkID", JoinInfo.LinkID
+    tmp.Add "LinkID", JoinInfo.linkID
     tmp.Add "CorpNum", JoinInfo.CorpNum
     tmp.Add "CorpName", JoinInfo.CorpName
     tmp.Add "CEOName", JoinInfo.CEOName
@@ -408,7 +408,7 @@ On Error GoTo ErrHandler
     tmp.Add "ZipCode", JoinInfo.ZipCode
     tmp.Add "BizClass", JoinInfo.BizClass
     tmp.Add "BizType", JoinInfo.BizType
-    tmp.Add "ContactName", JoinInfo.ContactName
+    tmp.Add "ContactName", JoinInfo.contactName
     tmp.Add "ContactEmail", JoinInfo.ContactEmail
     tmp.Add "ContactFAX", JoinInfo.ContactFAX
     tmp.Add "ContactHP", JoinInfo.ContactHP
@@ -953,15 +953,15 @@ On Error GoTo ErrHandler
     
     Dim postdata As String
     
-    Dim t As Variant
+    Dim T As Variant
     
-    Set t = CreateObject("Scripting.Dictionary")
+    Set T = CreateObject("Scripting.Dictionary")
     
-    t.Add "receiver", Receiver
-    t.Add "sender", Sender
-    t.Add "contents", Contents
+    T.Add "receiver", Receiver
+    T.Add "sender", Sender
+    T.Add "contents", Contents
     
-    postdata = m_Linkhub.toString(t)
+    postdata = m_Linkhub.toString(T)
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
                                 getSession_token(CorpNum), "SMS", postdata, UserID)
@@ -991,14 +991,14 @@ On Error GoTo ErrHandler
     
     Dim postdata As String
     
-    Dim t As Variant
+    Dim T As Variant
     
-    Set t = CreateObject("Scripting.Dictionary")
+    Set T = CreateObject("Scripting.Dictionary")
     
-    t.Add "receiver", Receiver
-    t.Add "sender", Sender
+    T.Add "receiver", Receiver
+    T.Add "sender", Sender
     
-    postdata = m_Linkhub.toString(t)
+    postdata = m_Linkhub.toString(T)
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
                                 getSession_token(CorpNum), "FAX", postdata, UserID)
@@ -1063,13 +1063,13 @@ On Error GoTo ErrHandler
     
     Set GetInfos = New Collection
     
-    Dim t As Variant
+    Dim T As Variant
     Dim info As PBTIInfo
     
-    For Each t In result
+    For Each T In result
         Set info = New PBTIInfo
         
-        info.fromDictionary t
+        info.fromDictionary T
         
         GetInfos.Add info
     
@@ -1154,6 +1154,29 @@ ErrHandler:
     m_LastErrMessage = Err.Description
     GetPrintURL = ""
 End Function
+'공급받는자 인쇄 URL확인
+Public Function GetEPrintURL(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, UserID As String) As String
+On Error GoTo ErrHandler
+    If MgtKey = "" Then
+        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+    End If
+    
+    Dim result As Variant
+    Dim strKeyType As String
+    
+    strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
+    
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "?TG=EPRINT", _
+                                getSession_token(CorpNum), UserID)
+    
+    GetEPrintURL = result.Item("url")
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    GetEPrintURL = ""
+End Function
+
 '메일 URL확인
 Public Function GetMailURL(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, UserID As String) As String
 On Error GoTo ErrHandler
@@ -1222,13 +1245,13 @@ On Error GoTo ErrHandler
     
     Set GetLogs = New Collection
     
-    Dim t As Variant
+    Dim T As Variant
     Dim info As PBTILog
     
-    For Each t In result
+    For Each T In result
         Set info = New PBTILog
         
-        info.fromDictionary t
+        info.fromDictionary T
         
         GetLogs.Add info
     
@@ -1282,13 +1305,13 @@ On Error GoTo ErrHandler
     
     Set GetFiles = New Collection
     
-    Dim t As Variant
+    Dim T As Variant
     Dim info As PBAttachFile
     
-    For Each t In result
+    For Each T In result
         Set info = New PBAttachFile
         
-        info.fromDictionary t
+        info.fromDictionary T
         
         GetFiles.Add info
     
@@ -1342,11 +1365,11 @@ On Error GoTo ErrHandler
     
     Set GetEmailPublicKeys = New Collection
     
-    Dim t As Variant
+    Dim T As Variant
     
-    For Each t In result
+    For Each T In result
         
-        GetEmailPublicKeys.Add t.Item("email")
+        GetEmailPublicKeys.Add T.Item("email")
     
     Next
     
