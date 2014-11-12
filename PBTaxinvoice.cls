@@ -168,9 +168,12 @@ Public Function toDictionary() As Variant
     toDictionary.Add "chkBill", chkBill
     toDictionary.Add "credit", credit
     toDictionary.Add "note", note
-    
-    toDictionary.Add "kwon", kwon
-    toDictionary.Add "ho", ho
+    If kwon <> "" Then
+        toDictionary.Add "kwon", CInt(kwon)
+    End If
+    If ho <> "" Then
+        toDictionary.Add "ho", CInt(ho)
+    End If
     
     toDictionary.Add "businessLicenseYN", businessLicenseYN
     toDictionary.Add "bankBookYN", bankBookYN
@@ -299,14 +302,14 @@ Public Sub fromDictionary(dic As Variant)
     If (tCollection Is Nothing) = False Then
         Set detailList = New Collection
         
-        Dim t As Variant
+        Dim T As Variant
         Dim detail As PBTIDetail
             
             
-        For Each t In tCollection
+        For Each T In tCollection
             Set detail = New PBTIDetail
             
-            detail.fromDictionary t
+            detail.fromDictionary T
             
             detailList.Add detail
             
