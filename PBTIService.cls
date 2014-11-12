@@ -626,6 +626,8 @@ On Error GoTo ErrHandler
     
     If ForceIssue Then
         tmp.Add "forceIssue", True
+    Else
+        tmp.Add "forceIssue", False
     End If
     
     postdata = m_Linkhub.toString(tmp)
