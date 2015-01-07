@@ -1326,7 +1326,7 @@ ErrHandler:
     Set GetFiles = Nothing
 End Function
 '첨부파일 삭제
-Public Function DeleteFile(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, FileID As String, Optional UserID As String) As Collection
+Public Function DeleteFile(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, FileID As String, Optional UserID As String) As PBResponse
 On Error GoTo ErrHandler
     If MgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
