@@ -422,7 +422,7 @@ On Error GoTo ErrHandler
     
     Set result = httpPOST("/Join", "", postdata)
     
-    JoinMember = New PBResponse
+    Set JoinMember = New PBResponse
     
     JoinMember.code = result.Item("code")
     JoinMember.message = result.Item("message")
