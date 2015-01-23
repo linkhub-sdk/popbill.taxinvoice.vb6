@@ -33,12 +33,11 @@ Private Const ServiceURL_TEST = "https://popbill_test.linkhub.co.kr"
 Private Const APIVersion = "1.0"
 
 Private m_IsTest As Boolean
-
-Private m_Token As LinkhubToken
 Private m_Linkhub As Linkhub
 Private m_scope As New Collection
 Private m_LastErrCode As Long
 Private m_LastErrMessage As String
+Private m_token_Dic
 
 '관리번호 형태
 Public Enum MgtKeyType
@@ -48,6 +47,15 @@ Public Enum MgtKeyType
 End Enum
 
 Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As Long)
+
+Private Sub Class_Initialize()
+    Set m_token_Dic = CreateObject("Scripting.Dictionary")
+End Sub
+
+Private Sub Class_Terminate()
+    m_token_Dic.RemoveAll
+    Set m_token_Dic = Nothing
+End Sub
 
 Private Function UniStrToUTF8(UniString) As Byte()
    ' Convert a Unicode string to a byte stream of UTF-8
@@ -133,6 +141,13 @@ Private Function getSession_token(CorpNum As String) As String
     Dim refresh As Boolean
     
     refresh = False
+    Dim m_Token As LinkhubToken
+    
+    Set m_Token = Nothing
+    
+    If m_token_Dic.Exists(CorpNum) Then
+        Set m_Token = m_token_Dic.Item(CorpNum)
+    End If
     
     If m_Token Is Nothing Then
         refresh = True
@@ -140,11 +155,15 @@ Private Function getSession_token(CorpNum As String) As String
         Dim utcnow As String
         utcnow = Format(m_Linkhub.UTCTime, "yyyy-MM-ddTHH:mm:ss.sssZ")
         refresh = m_Token.expiration < utcnow
+        
+        
     End If
     
     If refresh Then
     
         Set m_Token = m_Linkhub.getToken(IIf(m_IsTest, ServiceID_TEST, ServiceID_REAL), CorpNum, m_scope)
+        
+        m_token_Dic.Add CorpNum, m_Token
         
         If m_Token Is Nothing Then
             Err.Raise m_Linkhub.LastErrCode, "POPBILL", m_Linkhub.LastErrMessage
