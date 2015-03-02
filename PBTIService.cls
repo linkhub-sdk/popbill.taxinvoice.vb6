@@ -163,12 +163,12 @@ Private Function getSession_token(CorpNum As String) As String
     
         Set m_Token = m_Linkhub.getToken(IIf(m_IsTest, ServiceID_TEST, ServiceID_REAL), CorpNum, m_scope)
         
-        m_token_Dic.Add CorpNum, m_Token
-        
         If m_Token Is Nothing Then
             Err.Raise m_Linkhub.LastErrCode, "POPBILL", m_Linkhub.LastErrMessage
             Exit Function
         End If
+        
+        m_token_Dic.Add CorpNum, m_Token
         
     End If
     
