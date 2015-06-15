@@ -665,7 +665,7 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '발행예정
-Public Function Send(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional Memo As String, Optional UserID As String) As PBResponse
+Public Function Send(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional Memo As String, Optional EmailSubject As String, Optional UserID As String) As PBResponse
 On Error GoTo ErrHandler
     If MgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
@@ -678,7 +678,7 @@ On Error GoTo ErrHandler
     
     Dim postdata As String
     
-    postdata = "{""memo"":""" + Memo + """}"
+    postdata = "{""memo"":""" + Memo + """, ""emailSubject"":""" + EmailSubject + """}"
     
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum), "SEND", postdata, UserID)
     
