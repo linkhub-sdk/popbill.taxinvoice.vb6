@@ -35,6 +35,7 @@ Public trusteeMgtKey           As String
 Public supplyCostTotal         As String
 Public taxTotal                As String
 
+Public lateIssueYN             As Boolean
 Public issueDT                 As String
 Public preIssueDT              As String
 Public stateDT                 As String
@@ -78,6 +79,7 @@ Public Sub fromDictionary(dic As Variant)
     issueDT = dic.Item("issueDT")
     preIssueDT = dic.Item("preIssueDT")
     stateDT = dic.Item("stateDT")
+    lateIssueYN = dic.Item("lateIssueYN")
     openYN = dic.Item("openYN")
     openDT = dic.Item("openDT")
     

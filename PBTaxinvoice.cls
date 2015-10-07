@@ -13,6 +13,12 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+Public writeSpecification   As Boolean
+Public forceIssue           As Boolean
+Public memo                 As String
+Public emailSubject         As String
+Public dealInvoiceMgtKey    As String
+
 Public writeDate            As String
 Public chargeDirection      As String
 Public issueType            As String
@@ -97,6 +103,13 @@ Public addContactList As Collection
 
 Public Function toDictionary() As Variant
     Set toDictionary = CreateObject("Scripting.Dictionary")
+    
+    If writeSpecification Then toDictionary.Add "writeSpecification", True
+    If writeSpecification Then toDictionary.Add "forceIssue", True
+    
+    toDictionary.Add "memo", memo
+    toDictionary.Add "emailSubject", emailSubject
+    toDictionary.Add "dealInvoiceMgtKey", dealInvoiceMgtKey
     
     toDictionary.Add "writeDate", writeDate
     
