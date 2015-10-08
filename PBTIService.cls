@@ -1348,19 +1348,13 @@ On Error GoTo ErrHandler
         
     End If
     
-    If Page < 1 Then
-        Page = 1
-    End If
-    
-    uri = uri + "&Page=" + CStr(Page)
-    
     If IsNull(LateOnly) = False Then
         uri = uri + "&LateOnly=" + LateOnly
     End If
     
     Page = IIf(Page < 1, 1, Page)
     PerPage = IIf(PerPage < 1, 500, PerPage)
-        
+    uri = uri + "&Page=" + CStr(Page)
     uri = uri + "&PerPage=" + CStr(PerPage)
     
     
