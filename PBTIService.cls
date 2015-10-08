@@ -278,7 +278,7 @@ End Function
 
 Private Function httpPOST_File(url As String, BearerToken As String, postdata As String, FilePath As String, Optional UserID As String) As Variant
      
-    Dim winhttp1
+  Dim winhttp1
     Dim boundary As String
     boundary = "---------------------popbill"
     
@@ -286,6 +286,7 @@ Private Function httpPOST_File(url As String, BearerToken As String, postdata As
     Call winhttp1.Open("POST", IIf(m_IsTest, ServiceURL_TEST, ServiceURL_REAL) + url, False)
     Call winhttp1.setRequestHeader("x-pb-version", APIVersion)
     Call winhttp1.setRequestHeader("Accept-Encoding", "gzip,deflate")
+    
     
     If BearerToken <> "" Then
         Call winhttp1.setRequestHeader("Authorization", "Bearer " + BearerToken)
@@ -1296,7 +1297,7 @@ ErrHandler:
     Set GetInfos = Nothing
 End Function
 '세금계산서 목록조회
-Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, TaxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer)
+Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer)
 On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
@@ -1339,10 +1340,10 @@ On Error GoTo ErrHandler
         
     End If
     
-    If TaxType.Count > 0 Then
+    If taxType.Count > 0 Then
         uri = uri + "&TaxType="
-        For i = 1 To TaxType.Count
-            uri = uri + TaxType(i) + ","
+        For i = 1 To taxType.Count
+            uri = uri + taxType(i) + ","
         Next
         
     End If
