@@ -1671,3 +1671,73 @@ ErrHandler:
     m_LastErrMessage = Err.Description
     Set GetEmailPublicKeys = Nothing
 End Function
+'전자명세서 첨부
+Public Function AttachStatement(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, SubItemCode As Integer, SubMgtKey As String) As PBResponse
+On Error GoTo ErrHandler
+    If MgtKey = "" Then
+        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+    End If
+    
+    Dim result As Variant
+    
+    Dim postdata As String
+    Dim tmp As Variant
+    Set tmp = CreateObject("Scripting.Dictionary")
+    
+    tmp.Add "ItemCode", SubItemCode
+    tmp.Add "MgtKey", SubMgtKey
+    
+    Dim strKeyType As String
+    
+    strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
+        
+    postdata = m_Linkhub.toString(tmp)
+    
+    Set result = httpPOST("/Taxinvoice/" + strKeyType + "/" + MgtKey + "/AttachStmt", getSession_token(CorpNum), postdata)
+    Set AttachStatement = New PBResponse
+    
+    AttachStatement.code = result.Item("code")
+    AttachStatement.message = result.Item("message")
+    
+    Exit Function
+    
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set AttachStatement = Nothing
+End Function
+'전자명세서 첨부해제
+Public Function DetachStatement(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, SubItemCode As Integer, SubMgtKey As String) As PBResponse
+On Error GoTo ErrHandler
+    If MgtKey = "" Then
+        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+    End If
+    
+    Dim result As Variant
+    
+    Dim postdata As String
+    Dim tmp As Variant
+    Set tmp = CreateObject("Scripting.Dictionary")
+    
+    tmp.Add "ItemCode", SubItemCode
+    tmp.Add "MgtKey", SubMgtKey
+    
+    Dim strKeyType As String
+    
+    strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
+        
+    postdata = m_Linkhub.toString(tmp)
+    
+    Set result = httpPOST("/Taxinvoice/" + strKeyType + "/" + MgtKey + "/DetachStmt", getSession_token(CorpNum), postdata)
+    Set DetachStatement = New PBResponse
+    
+    DetachStatement.code = result.Item("code")
+    DetachStatement.message = result.Item("message")
+    
+    Exit Function
+    
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set DetachStatement = Nothing
+End Function
