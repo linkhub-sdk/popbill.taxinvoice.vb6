@@ -1297,7 +1297,7 @@ ErrHandler:
     Set GetInfos = Nothing
 End Function
 '세금계산서 목록조회
-Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer)
+Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String)
 On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
@@ -1356,6 +1356,7 @@ On Error GoTo ErrHandler
     PerPage = IIf(PerPage < 1, 500, PerPage)
     uri = uri + "&Page=" + CStr(Page)
     uri = uri + "&PerPage=" + CStr(PerPage)
+    uri = uri + "&Order=" + Order
     
     
     Set result = httpGET(uri, getSession_token(CorpNum), "")
