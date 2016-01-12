@@ -25,12 +25,17 @@ Public writeDate               As String
 Public invoicerCorpName        As String
 Public invoicerCorpNum         As String
 Public invoicerMgtKey          As String
+Public invoicerPrintYN         As Boolean
+
 Public invoiceeCorpName        As String
 Public invoiceeCorpNum         As String
 Public invoiceeMgtKey          As String
+Public invoiceePrintYN         As Boolean
+
 Public trusteeCorpName         As String
 Public trusteeCorpNum          As String
 Public trusteeMgtKey           As String
+Public trusteePrintYN          As Boolean
 
 Public supplyCostTotal         As String
 Public taxTotal                As String
@@ -66,12 +71,17 @@ Public Sub fromDictionary(dic As Variant)
     invoicerCorpName = dic.Item("invoicerCorpName")
     invoicerCorpNum = dic.Item("invoicerCorpNum")
     invoicerMgtKey = dic.Item("invoicerMgtKey")
+    invoicerPrintYN = dic.Item("invoicerPrintYN")
+    
     invoiceeCorpName = dic.Item("invoiceeCorpName")
     invoiceeCorpNum = dic.Item("invoiceeCorpNum")
     invoiceeMgtKey = dic.Item("invoiceeMgtKey")
+    invoiceePrintYN = dic.Item("invoiceePrintYN")
+    
     trusteeCorpName = dic.Item("trusteeCorpName")
     trusteeCorpNum = dic.Item("trusteeCorpNum")
     trusteeMgtKey = dic.Item("trusteeMgtKey")
+    trusteePrintYN = dic.Item("trusteePrintYN")
     
     supplyCostTotal = dic.Item("supplyCostTotal")
     taxTotal = dic.Item("taxTotal")
