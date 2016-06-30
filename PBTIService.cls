@@ -612,6 +612,24 @@ ErrHandler:
     Set GetCorpInfo = Nothing
 End Function
 
+'과금정보 조회
+Public Function GetChargeInfo(CorpNum As String, Optional UserID As String) As PBChargeInfo
+On Error GoTo ErrHandler
+    Dim result As Variant
+       
+    Set result = httpGET("/Taxinvoice/ChargeInfo", getSession_token(CorpNum), UserID)
+    
+    Set GetChargeInfo = New PBTIChargeInfo
+        
+    GetChargeInfo.fromDictionary result
+    Exit Function
+    
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set GetChargeInfo = Nothing
+End Function
+
 
 '''''''''''''''''''''''''' End Of PopbillBase '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '세금계산서 URL확인
@@ -1297,7 +1315,7 @@ ErrHandler:
     Set GetInfos = Nothing
 End Function
 '세금계산서 목록조회
-Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String)
+Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional UserID As String)
 On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
@@ -1352,6 +1370,18 @@ On Error GoTo ErrHandler
         uri = uri + "&LateOnly=" + LateOnly
     End If
     
+    If IsNull(TaxRegIDType) = False Then
+        uri = uri + "&TaxRegIDType=" + TaxRegIDType
+    End If
+    
+    If IsNull(TaxRegID) = False Then
+        uri = uri + "&TaxRegID=" + TaxRegID
+    End If
+    
+    If IsNull(TaxRegIDYN) = False Then
+        uri = uri + "&TaxRegIDYN=" + TaxRegIDYN
+    End If
+    
     Page = IIf(Page < 1, 1, Page)
     PerPage = IIf(PerPage < 1, 500, PerPage)
     uri = uri + "&Page=" + CStr(Page)
@@ -1359,7 +1389,7 @@ On Error GoTo ErrHandler
     uri = uri + "&Order=" + Order
     
     
-    Set result = httpGET(uri, getSession_token(CorpNum), "")
+    Set result = httpGET(uri, getSession_token(CorpNum), UserID)
     
     Set Search = New PBTISearchList
     
