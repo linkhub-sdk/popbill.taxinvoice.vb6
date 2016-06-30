@@ -619,7 +619,7 @@ On Error GoTo ErrHandler
        
     Set result = httpGET("/Taxinvoice/ChargeInfo", getSession_token(CorpNum), UserID)
     
-    Set GetChargeInfo = New PBTIChargeInfo
+    Set GetChargeInfo = New PBChargeInfo
         
     GetChargeInfo.fromDictionary result
     Exit Function
