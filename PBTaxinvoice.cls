@@ -105,7 +105,7 @@ Public Function toDictionary() As Variant
     Set toDictionary = CreateObject("Scripting.Dictionary")
     
     If writeSpecification Then toDictionary.Add "writeSpecification", True
-    If writeSpecification Then toDictionary.Add "forceIssue", True
+    If forceIssue Then toDictionary.Add "forceIssue", True
     
     toDictionary.Add "memo", memo
     toDictionary.Add "emailSubject", emailSubject
