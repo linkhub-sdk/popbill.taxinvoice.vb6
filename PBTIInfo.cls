@@ -13,6 +13,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+Public closeDownState          As Integer
+Public closeDownStateDate      As String
+
 Public itemKey                 As String
 Public stateCode               As Integer
 Public taxType                 As String
@@ -58,7 +61,9 @@ Public stateMemo               As String
 Public regDT                   As String
 
 Public Sub fromDictionary(dic As Variant)
-
+    closeDownState = dic.Item("closeDownState")
+    closeDownStateDate = dic.Item("closeDownStateDate")
+    
     itemKey = dic.Item("itemKey")
     stateCode = dic.Item("stateCode")
     taxType = dic.Item("taxType")

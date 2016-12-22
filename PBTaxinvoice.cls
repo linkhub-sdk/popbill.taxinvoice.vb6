@@ -13,6 +13,8 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
+Public closeDownState       As Integer
+Public closeDownStateDate   As String
 Public writeSpecification   As Boolean
 Public forceIssue           As Boolean
 Public memo                 As String
@@ -228,6 +230,9 @@ End Function
 
 Public Sub fromDictionary(dic As Variant)
 
+    closeDownState = dic.Item("closeDownState")
+    closeDownStateDate = dic.Item("closeDownStateDate")
+    
     writeDate = dic.Item("writeDate")
     chargeDirection = dic.Item("chargeDirection")
     issueType = dic.Item("issueType")
