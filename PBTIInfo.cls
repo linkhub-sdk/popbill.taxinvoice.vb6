@@ -44,6 +44,7 @@ Public supplyCostTotal         As String
 Public taxTotal                As String
 
 Public lateIssueYN             As Boolean
+Public interOPYN               As Boolean
 Public issueDT                 As String
 Public preIssueDT              As String
 Public stateDT                 As String
@@ -95,6 +96,7 @@ Public Sub fromDictionary(dic As Variant)
     preIssueDT = dic.Item("preIssueDT")
     stateDT = dic.Item("stateDT")
     lateIssueYN = dic.Item("lateIssueYN")
+    interOPYN = dic.Item("interOPYN")
     openYN = dic.Item("openYN")
     openDT = dic.Item("openDT")
     
@@ -107,7 +109,5 @@ Public Sub fromDictionary(dic As Variant)
     stateMemo = dic.Item("stateMemo")
     
     regDT = dic.Item("regDT")
-    
-
 End Sub
 
