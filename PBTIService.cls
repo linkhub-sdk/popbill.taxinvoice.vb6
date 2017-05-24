@@ -497,7 +497,8 @@ On Error GoTo ErrHandler
     Dim tmp
     
     Set tmp = CreateObject("Scripting.Dictionary")
-    
+        
+    tmp.Add "id", ContactInfo.id
     tmp.Add "personName", ContactInfo.personName
     tmp.Add "tel", ContactInfo.tel
     tmp.Add "hp", ContactInfo.hp
@@ -1368,7 +1369,7 @@ ErrHandler:
     Set GetInfos = Nothing
 End Function
 '세금계산서 목록조회
-Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional InterOPYN As String = "")
+Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "")
 On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
@@ -1439,8 +1440,8 @@ On Error GoTo ErrHandler
         uri = uri + "&QString=" + URLEncode(QString)
     End If
     
-    If InterOPYN <> "" Then
-        uri = uri + "&InterOPYN=" + InterOPYN
+    If interOPYN <> "" Then
+        uri = uri + "&InterOPYN=" + interOPYN
     End If
     
     Page = IIf(Page < 1, 1, Page)
