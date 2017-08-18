@@ -31,7 +31,7 @@ Option Explicit
 Private Const ServiceID_REAL = "POPBILL"
 Private Const ServiceID_TEST = "POPBILL_TEST"
 Private Const ServiceURL_REAL = "https://popbill.linkhub.co.kr"
-Private Const ServiceURL_TEST = "https://popbill_test.linkhub.co.kr"
+Private Const ServiceURL_TEST = "https://popbill-test.linkhub.co.kr"
 Private Const APIVersion = "1.0"
 
 Private Const adTypeBinary As Long = 1
