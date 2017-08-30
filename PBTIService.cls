@@ -553,6 +553,19 @@ ErrHandler:
     m_LastErrCode = Err.Number
     m_LastErrMessage = Err.Description
 End Function
+'파트너 포인트 충전 URL
+Public Function GetPartnerURL(CorpNum As String, TOGO As String) As String
+    On Error GoTo ErrHandler
+    
+    GetPartnerURL = m_Linkhub.GetPartnerURL(getSession_token(CorpNum), IIf(m_IsTest, ServiceID_TEST, ServiceID_REAL), TOGO)
+    
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    GetPartnerURL = m_LastErrCode
+End Function
+
 '회원잔액조회
 Public Function GetBalance(CorpNum As String) As Double
     On Error GoTo ErrHandler
