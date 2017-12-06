@@ -24,7 +24,7 @@ Option Explicit
 ' Author : Kim Seongjun (pallet027@gmail.com)
 ' Written : 2014-04-22
 ' Contributor : Jeong Yohan (code@linkhub.co.kr)
-' Updated : 2017-05-24
+' Updated : 2017-12-06
 '
 ' Thanks for your interest.
 '=================================================================================
@@ -1382,7 +1382,7 @@ ErrHandler:
     Set GetInfos = Nothing
 End Function
 '세금계산서 목록조회
-Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "")
+Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "", Optional IssueType As Collection = Null)
 On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
@@ -1431,6 +1431,13 @@ On Error GoTo ErrHandler
             uri = uri + taxType(i) + ","
         Next
         
+    End If
+    
+    If IsNull(IssueType) = False Then
+        uri = uri + "&IssueType="
+        For i = 1 To IssueType.Count
+            uri = uri + IssueType(i) + ","
+        Next
     End If
     
     If IsNull(LateOnly) = False Then
