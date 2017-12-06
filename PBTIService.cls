@@ -1433,7 +1433,7 @@ On Error GoTo ErrHandler
         
     End If
     
-    If IssueType.Count > 0 Then
+    If Not IssueType Is Nothing Then
         uri = uri + "&IssueType="
         For i = 1 To IssueType.Count
             uri = uri + IssueType(i) + ","
