@@ -23,6 +23,8 @@ Public email            As String
 Public regDT            As String
 Public searchAllAllowYN As Boolean
 Public mgrYN            As Boolean
+Public state            As Integer
+
 
 Public Sub fromDictionary(dic As Variant)
     id = dic.Item("id")
@@ -35,6 +37,7 @@ Public Sub fromDictionary(dic As Variant)
     regDT = dic.Item("regDT")
     searchAllAllowYN = CStr(dic.Item("searchAllAllowYN"))
     mgrYN = CStr(dic.Item("mgrYN"))
+    state = dic.Item("state")
 End Sub
 
 

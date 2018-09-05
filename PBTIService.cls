@@ -275,7 +275,8 @@ Private Function httpPOST(url As String, BearerToken As String, postdata As Stri
     
 End Function
 
-Private Function httpPOST_override(url As String, BearerToken As String, override As String, postdata As String, Optional UserID As String) As Variant
+
+Private Function httpPOST_override(url As String, BearerToken As String, override As String, postdata As String, Optional UserID As String, Optional contentstype As String = "") As Variant
      
     Dim winhttp1
     
@@ -296,8 +297,14 @@ Private Function httpPOST_override(url As String, BearerToken As String, overrid
         Call winhttp1.setRequestHeader("x-pb-userid", UserID)
     End If
     
-    Call winhttp1.setRequestHeader("Content-Type", "Application/json")
     
+    If contentstype <> "" Then
+        Call winhttp1.setRequestHeader("Content-Type", contentstype)
+    Else
+        Call winhttp1.setRequestHeader("Content-Type", "Application/json")
+    End If
+    
+ 
     winhttp1.Send (postdata)
         
     Dim Response As String
@@ -1382,7 +1389,7 @@ ErrHandler:
     Set GetInfos = Nothing
 End Function
 '세금계산서 목록조회
-Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "", Optional IssueType As Collection = Null)
+Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "", Optional issueType As Collection = Null)
 On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
@@ -1433,10 +1440,10 @@ On Error GoTo ErrHandler
         
     End If
     
-    If Not IssueType Is Nothing Then
+    If Not issueType Is Nothing Then
         uri = uri + "&IssueType="
-        For i = 1 To IssueType.Count
-            uri = uri + IssueType(i) + ","
+        For i = 1 To issueType.Count
+            uri = uri + issueType(i) + ","
         Next
     End If
     
@@ -1853,4 +1860,42 @@ ErrHandler:
     m_LastErrCode = Err.Number
     m_LastErrMessage = Err.Description
     Set DetachStatement = Nothing
+End Function
+
+'문서관리번호 할당
+Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, Itemkey As String, MgtKey As String, Optional UserID As String = "") As PBResponse
+On Error GoTo ErrHandler
+    
+    Dim postdata As String
+
+    If MgtKey = "" Then
+        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+    End If
+    
+    Dim result As Variant
+    Dim strKeyType As String
+    
+    strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
+    
+    postdata = "MgtKey=" + MgtKey
+    
+    
+    Set result = httpPOST_override("/Taxinvoice/" + Itemkey + "/" + strKeyType, _
+                                    getSession_token(CorpNum), _
+                                    "", _
+                                    postdata, _
+                                    UserID, _
+                                    "application/x-www-form-urlencoded; charset=utf-8")
+                                    
+    Set AssignMgtKey = New PBResponse
+    
+    AssignMgtKey.code = result.Item("code")
+    AssignMgtKey.message = result.Item("message")
+    
+    Exit Function
+
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set AssignMgtKey = Nothing
 End Function
