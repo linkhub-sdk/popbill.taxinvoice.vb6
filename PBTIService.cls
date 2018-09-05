@@ -470,8 +470,8 @@ On Error GoTo ErrHandler
     
     Set tmp = CreateObject("Scripting.Dictionary")
     
-    tmp.Add "id", ContactInfo.id
-    tmp.Add "pwd", ContactInfo.pwd
+    tmp.Add "id", ContactInfo.ID
+    tmp.Add "pwd", ContactInfo.PWD
     tmp.Add "personName", ContactInfo.personName
     tmp.Add "tel", ContactInfo.tel
     tmp.Add "hp", ContactInfo.hp
@@ -505,7 +505,7 @@ On Error GoTo ErrHandler
     
     Set tmp = CreateObject("Scripting.Dictionary")
         
-    tmp.Add "id", ContactInfo.id
+    tmp.Add "id", ContactInfo.ID
     tmp.Add "personName", ContactInfo.personName
     tmp.Add "tel", ContactInfo.tel
     tmp.Add "hp", ContactInfo.hp
@@ -650,8 +650,8 @@ On Error GoTo ErrHandler
     tmp.Add "ContactFAX", JoinInfo.ContactFAX
     tmp.Add "ContactHP", JoinInfo.ContactHP
     tmp.Add "ContactTEL", JoinInfo.ContactTEL
-    tmp.Add "ID", JoinInfo.id
-    tmp.Add "PWD", JoinInfo.pwd
+    tmp.Add "ID", JoinInfo.ID
+    tmp.Add "PWD", JoinInfo.PWD
     
     postdata = m_Linkhub.toString(tmp)
     
@@ -1389,7 +1389,7 @@ ErrHandler:
     Set GetInfos = Nothing
 End Function
 '세금계산서 목록조회
-Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, State As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "", Optional issueType As Collection = Null)
+Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, state As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "", Optional issueType As Collection = Null)
 On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
@@ -1416,10 +1416,10 @@ On Error GoTo ErrHandler
     uri = uri + "&SDate=" + SDate
     uri = uri + "&EDate=" + EDate
     
-    If State.Count > 0 Then
+    If state.Count > 0 Then
         uri = uri + "&State="
-        For i = 1 To State.Count
-            uri = uri + State(i) + ","
+        For i = 1 To state.Count
+            uri = uri + state(i) + ","
         Next
         
     End If
@@ -1863,9 +1863,9 @@ ErrHandler:
 End Function
 
 '문서관리번호 할당
-Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, Itemkey As String, MgtKey As String, Optional UserID As String = "") As PBResponse
-On Error GoTo ErrHandler
-    
+Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, itemKey As String, MgtKey As String, Optional UserID As String = "") As PBResponse
+    On Error GoTo ErrHandler
+
     Dim postdata As String
 
     If MgtKey = "" Then
@@ -1880,7 +1880,7 @@ On Error GoTo ErrHandler
     postdata = "MgtKey=" + MgtKey
     
     
-    Set result = httpPOST_override("/Taxinvoice/" + Itemkey + "/" + strKeyType, _
+    Set result = httpPOST_override("/Taxinvoice/" + itemKey + "/" + strKeyType, _
                                     getSession_token(CorpNum), _
                                     "", _
                                     postdata, _
