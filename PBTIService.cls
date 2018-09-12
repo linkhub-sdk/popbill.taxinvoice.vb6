@@ -470,8 +470,8 @@ On Error GoTo ErrHandler
     
     Set tmp = CreateObject("Scripting.Dictionary")
     
-    tmp.Add "id", ContactInfo.ID
-    tmp.Add "pwd", ContactInfo.PWD
+    tmp.Add "id", ContactInfo.id
+    tmp.Add "pwd", ContactInfo.pwd
     tmp.Add "personName", ContactInfo.personName
     tmp.Add "tel", ContactInfo.tel
     tmp.Add "hp", ContactInfo.hp
@@ -505,7 +505,7 @@ On Error GoTo ErrHandler
     
     Set tmp = CreateObject("Scripting.Dictionary")
         
-    tmp.Add "id", ContactInfo.ID
+    tmp.Add "id", ContactInfo.id
     tmp.Add "personName", ContactInfo.personName
     tmp.Add "tel", ContactInfo.tel
     tmp.Add "hp", ContactInfo.hp
@@ -650,8 +650,8 @@ On Error GoTo ErrHandler
     tmp.Add "ContactFAX", JoinInfo.ContactFAX
     tmp.Add "ContactHP", JoinInfo.ContactHP
     tmp.Add "ContactTEL", JoinInfo.ContactTEL
-    tmp.Add "ID", JoinInfo.ID
-    tmp.Add "PWD", JoinInfo.PWD
+    tmp.Add "ID", JoinInfo.id
+    tmp.Add "PWD", JoinInfo.pwd
     
     postdata = m_Linkhub.toString(tmp)
     
@@ -1867,7 +1867,11 @@ Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, itemKey A
     On Error GoTo ErrHandler
 
     Dim postdata As String
-
+    
+    If itemKey = "" Then
+        Err.Raise -99999999, "POPBILL", "아이템키가 입력되지 않았습니다."
+    End If
+    
     If MgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
@@ -1899,3 +1903,59 @@ ErrHandler:
     m_LastErrMessage = Err.Description
     Set AssignMgtKey = Nothing
 End Function
+
+'알림메일 전송목록 조회
+Public Function ListEmailConfig(CorpNum As String, Optional UserID As String = "") As Collection
+    On Error GoTo ErrHandler
+    
+    Dim result As Variant
+
+    Set result = httpGET("/Taxinvoice/EmailSendConfig", getSession_token(CorpNum), UserID)
+   
+    Set ListEmailConfig = New Collection
+    
+    Dim T As Variant
+    Dim info As PBEmailConfig
+    
+    For Each T In result
+        Set info = New PBEmailConfig
+        
+        info.fromDictionary T
+        
+        ListEmailConfig.Add info
+    Next
+    
+    Exit Function
+
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set ListEmailConfig = Nothing
+End Function
+
+'알림메일 전송설정 수정
+Public Function UpdateEmailConfig(CorpNum As String, emailType As String, sendYN As Boolean, Optional UserID As String = "") As PBResponse
+    On Error GoTo ErrHandler
+    
+    Dim result As Variant
+
+    If emailType = "" Then
+        Err.Raise -99999999, "POPBILL", "메일전송 타입이 입력되지 않았습니다."
+    End If
+    
+    
+    Set result = httpPOST("/Taxinvoice/EmailSendConfig?EmailType=" + emailType + "&SendYN=" + CStr(sendYN), getSession_token(CorpNum), "", UserID)
+   
+    Set UpdateEmailConfig = New PBResponse
+    
+    UpdateEmailConfig.code = result.Item("code")
+    UpdateEmailConfig.message = result.Item("message")
+    
+    Exit Function
+
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set UpdateEmailConfig = Nothing
+End Function
+
