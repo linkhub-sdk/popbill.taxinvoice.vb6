@@ -25,6 +25,8 @@ Option Explicit
 ' Written : 2014-04-22
 ' Contributor : Jeong Yohan (code@linkhub.co.kr)
 ' Updated : 2017-12-06
+' Contributor : Kim EunHye (code@linkhub.co.kr)
+' Updated : 2018-10-04
 '
 ' Thanks for your interest.
 '=================================================================================
@@ -1959,3 +1961,28 @@ ErrHandler:
     Set UpdateEmailConfig = Nothing
 End Function
 
+'공인인증서 유효성 확인
+Public Function CheckCertValidation(CorpNum As String, Optional UserID As String = "") As PBResponse
+    On Error GoTo ErrHandler
+    
+    Dim result As Variant
+
+    If CorpNum = "" Then
+        Err.Raise -99999999, "POPBILL", "팝빌회원의 사업자번호가 입력되지 않았습니다.."
+    End If
+    
+    
+    Set result = httpGET("/Taxinvoice/CertCheck", getSession_token(CorpNum), UserID)
+   
+    Set CheckCertValidation = New PBResponse
+    
+    CheckCertValidation.code = result.Item("code")
+    CheckCertValidation.message = result.Item("message")
+    
+    Exit Function
+
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set CheckCertValidation = Nothing
+End Function
