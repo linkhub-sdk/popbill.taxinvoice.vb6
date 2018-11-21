@@ -617,6 +617,69 @@ ErrHandler:
     m_LastErrMessage = Err.Description
     GetPopbillURL = ""
 End Function
+
+
+'팝빌 로그인 기본 URL
+Public Function GetAccessURL(CorpNum As String, UserID As String) As String
+On Error GoTo ErrHandler
+    Dim result As Variant
+    
+    Set result = httpGET("/?TG=LOGIN", getSession_token(CorpNum), UserID)
+    
+    GetAccessURL = result.Item("url")
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    GetAccessURL = ""
+End Function
+
+'팝빌 연동회원 포인트 충전 URL
+Public Function GetChargeURL(CorpNum As String, UserID As String) As String
+On Error GoTo ErrHandler
+    Dim result As Variant
+    
+    Set result = httpGET("/?TG=CHRG", getSession_token(CorpNum), UserID)
+    
+    GetChargeURL = result.Item("url")
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    GetChargeURL = ""
+End Function
+
+'팝빌 인감 및 첨부문서 등록 URL
+Public Function GetSealURL(CorpNum As String, UserID As String) As String
+On Error GoTo ErrHandler
+   Dim result As Variant
+   
+   Set result = httpGET("/?TG=SEAL", getSession_token(CorpNum), UserID)
+   
+   GetSealURL = result.Item("url")
+   Exit Function
+ErrHandler:
+   m_LastErrCode = Err.Number
+   m_LastErrMessage = Err.Description
+   GetSealURL = ""
+End Function
+
+'공인인증서 등록 URL
+Public Function GetTaxCertURL(CorpNum As String, UserID As String) As String
+On Error GoTo ErrHandler
+   Dim result As Variant
+   
+   Set result = httpGET("/?TG=CERT", getSession_token(CorpNum), UserID)
+   
+   GetTaxCertURL = result.Item("url")
+   Exit Function
+ErrHandler:
+   m_LastErrCode = Err.Number
+   m_LastErrMessage = Err.Description
+   GetTaxCertURL = ""
+End Function
+
+
 '회원가입 여부
 Public Function CheckIsMember(CorpNum As String, LinkID As String) As PBResponse
 On Error GoTo ErrHandler
@@ -1111,6 +1174,35 @@ ErrHandler:
     m_LastErrCode = Err.Number
     m_LastErrMessage = Err.Description
 End Function
+
+'즉시요청
+Public Function RegistRequest(CorpNum As String, Taxinvoice As PBTaxinvoice, Optional UserID As String = "") As PBResponse
+    On Error GoTo ErrHandler
+
+    Dim result As Variant
+    Dim tmpDic As Variant
+    
+    Set tmpDic = Taxinvoice.toDictionary
+        
+    Dim postdata As String
+    
+    postdata = m_Linkhub.toString(tmpDic)
+    
+    Set result = httpPOST_override("/Taxinvoice", getSession_token(CorpNum), "REQUEST", postdata, UserID)
+    
+    Set RegistRequest = New PBResponse
+    
+    RegistRequest.code = result.Item("code")
+    RegistRequest.message = result.Item("message")
+    
+    
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set RegistRequest = Nothing
+End Function
+
 '역)발행요청
 Public Function Request(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
