@@ -15,4 +15,5 @@ Option Explicit
 
 Public code As Long
 Public message As String
+Public ntsConfirmNum As String
 

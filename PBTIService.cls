@@ -24,9 +24,7 @@ Option Explicit
 ' Author : Kim Seongjun (pallet027@gmail.com)
 ' Written : 2014-04-22
 ' Contributor : Jeong Yohan (code@linkhub.co.kr)
-' Updated : 2017-12-06
-' Contributor : Kim Hyunjin (code@linkhub.co.kr)
-' Updated : 2018-11-21
+' Updated : 2019-03-07
 '
 ' Thanks for your interest.
 '=================================================================================
@@ -828,7 +826,7 @@ End Function
 
 
 '관려번호 사용여부 확인
-Public Function CheckMgtKeyInUse(CorpNum As String, KeyType As MgtKeyType, MgtKey As String) As PBResponse
+Public Function checkMgtKeyInUse(CorpNum As String, KeyType As MgtKeyType, MgtKey As String) As PBResponse
 On Error GoTo ErrHandler
     If MgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
@@ -841,23 +839,23 @@ On Error GoTo ErrHandler
     
     Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum))
     
-    Set CheckMgtKeyInUse = New PBResponse
+    Set checkMgtKeyInUse = New PBResponse
     
-    CheckMgtKeyInUse.code = IIf(IsNull(result.Item("itemKey")), 0, 1)
-    CheckMgtKeyInUse.message = IIf(IsNull(result.Item("itemKey")), "미사용중", "사용중")
+    checkMgtKeyInUse.code = IIf(IsNull(result.Item("itemKey")), 0, 1)
+    checkMgtKeyInUse.message = IIf(IsNull(result.Item("itemKey")), "미사용중", "사용중")
     
     Exit Function
 ErrHandler:
     If Err.Number = -11000005 Then
-        Set CheckMgtKeyInUse = New PBResponse
-        CheckMgtKeyInUse.code = 0
-        CheckMgtKeyInUse.message = "미사용중"
+        Set checkMgtKeyInUse = New PBResponse
+        checkMgtKeyInUse.code = 0
+        checkMgtKeyInUse.message = "미사용중"
         Exit Function
     End If
     
     m_LastErrCode = Err.Number
     m_LastErrMessage = Err.Description
-    Set CheckMgtKeyInUse = Nothing
+    Set checkMgtKeyInUse = Nothing
 End Function
 '즉시발행
 Public Function RegistIssue(CorpNum As String, Taxinvoice As PBTaxinvoice, Optional UserID As String = "") As PBResponse
@@ -878,6 +876,7 @@ Public Function RegistIssue(CorpNum As String, Taxinvoice As PBTaxinvoice, Optio
     
     RegistIssue.code = result.Item("code")
     RegistIssue.message = result.Item("message")
+    RegistIssue.ntsConfirmNum = result.Item("ntsConfirmNum")
     
     Exit Function
 ErrHandler:
@@ -1018,6 +1017,7 @@ On Error GoTo ErrHandler
     
     Issue.code = result.Item("code")
     Issue.message = result.Item("message")
+    Issue.ntsConfirmNum = result.Item("ntsConfirmNum")
     
     Exit Function
     
@@ -1650,6 +1650,29 @@ ErrHandler:
     m_LastErrMessage = Err.Description
     GetPopUpURL = ""
 End Function
+'팝업URL (메뉴/버튼 제외)
+Public Function GetViewURL(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As String
+On Error GoTo ErrHandler
+    If MgtKey = "" Then
+        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+    End If
+    
+    Dim result As Variant
+    Dim strKeyType As String
+    
+    strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
+    
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "?TG=VIEW", _
+                                getSession_token(CorpNum), UserID)
+    
+    GetViewURL = result.Item("url")
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    GetViewURL = ""
+End Function
+
 '인쇄 URL확인
 Public Function GetPrintURL(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
