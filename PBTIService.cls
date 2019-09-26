@@ -24,7 +24,7 @@ Option Explicit
 ' Author : Kim Seongjun (pallet027@gmail.com)
 ' Written : 2014-04-22
 ' Contributor : Jeong Yohan (code@linkhub.co.kr)
-' Updated : 2019-03-07
+' Updated : 2019-09-26
 '
 ' Thanks for your interest.
 '=================================================================================
@@ -39,6 +39,7 @@ Private Const adTypeText As Long = 2
 Private Const adModeReadWrite As Long = 3
 
 Private m_IsTest As Boolean
+Private m_IPRestrictOnOff As Boolean
 Private m_Linkhub As Linkhub
 Private m_scope As New Collection
 Private m_LastErrCode As Long
@@ -176,6 +177,9 @@ End Property
 Public Property Let IsTest(ByVal value As Boolean)
     m_IsTest = value
 End Property
+Public Property Let IPRestrictOnOff(ByVal value As Boolean)
+    m_IPRestrictOnOff = value
+End Property
 '√ ±‚»≠
 Public Sub Initialize(LinkID As String, SecretKey As String)
     Set m_Linkhub = New Linkhub
@@ -188,7 +192,8 @@ Public Sub Initialize(LinkID As String, SecretKey As String)
     m_scope.Add "110"
     
     m_IsTest = False
-    
+    m_IPRestrictOnOff = True
+        
 End Sub
 Private Function getSession_token(CorpNum As String) As String
     Dim refresh As Boolean
@@ -212,7 +217,7 @@ Private Function getSession_token(CorpNum As String) As String
     
     If refresh Then
     
-        Set m_Token = m_Linkhub.getToken(IIf(m_IsTest, ServiceID_TEST, ServiceID_REAL), CorpNum, m_scope)
+        Set m_Token = m_Linkhub.getToken(IIf(m_IsTest, ServiceID_TEST, ServiceID_REAL), CorpNum, m_scope, IIf(m_IPRestrictOnOff, "", "*"))
         
         If m_Token Is Nothing Then
             Err.Raise m_Linkhub.LastErrCode, "POPBILL", m_Linkhub.LastErrMessage
@@ -876,7 +881,7 @@ Public Function RegistIssue(CorpNum As String, Taxinvoice As PBTaxinvoice, Optio
     
     RegistIssue.code = result.Item("code")
     RegistIssue.message = result.Item("message")
-    RegistIssue.ntsConfirmNum = result.Item("ntsConfirmNum")
+    RegistIssue.ntsconfirmNum = result.Item("ntsConfirmNum")
     
     Exit Function
 ErrHandler:
@@ -1017,7 +1022,7 @@ On Error GoTo ErrHandler
     
     Issue.code = result.Item("code")
     Issue.message = result.Item("message")
-    Issue.ntsConfirmNum = result.Item("ntsConfirmNum")
+    Issue.ntsconfirmNum = result.Item("ntsConfirmNum")
     
     Exit Function
     
