@@ -24,7 +24,7 @@ Option Explicit
 ' Author : Kim Seongjun (pallet027@gmail.com)
 ' Written : 2014-04-22
 ' Contributor : Jeong Yohan (code@linkhub.co.kr)
-' Updated : 2019-09-26
+' Updated : 2020-07-17
 '
 ' Thanks for your interest.
 '=================================================================================
@@ -1500,7 +1500,7 @@ ErrHandler:
     Set GetInfos = Nothing
 End Function
 '세금계산서 목록조회
-Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, state As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "", Optional issueType As Collection = Null)
+Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, state As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "", Optional issueType As Collection = Null, Optional regType As Collection = Null)
 On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
@@ -1555,6 +1555,13 @@ On Error GoTo ErrHandler
         uri = uri + "&IssueType="
         For i = 1 To issueType.Count
             uri = uri + issueType(i) + ","
+        Next
+    End If
+    
+    If Not regType Is Nothing Then
+        uri = uri + "&RegType="
+        For i = 1 To regType.Count
+            uri = uri + regType(i) + ","
         Next
     End If
     
