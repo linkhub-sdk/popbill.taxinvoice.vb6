@@ -24,7 +24,7 @@ Option Explicit
 ' Author : Kim Seongjun (pallet027@gmail.com)
 ' Written : 2014-04-22
 ' Contributor : Jeong Yohan (code@linkhub.co.kr)
-' Updated : 2020-07-17
+' Updated : 2020-07-20
 '
 ' Thanks for your interest.
 '=================================================================================
@@ -831,9 +831,9 @@ End Function
 
 
 '관려번호 사용여부 확인
-Public Function checkMgtKeyInUse(CorpNum As String, KeyType As MgtKeyType, MgtKey As String) As PBResponse
+Public Function checkMgtKeyInUse(CorpNum As String, KeyType As MgtKeyType, mgtKey As String) As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -842,7 +842,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum))
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey, getSession_token(CorpNum))
     
     Set checkMgtKeyInUse = New PBResponse
     
@@ -921,9 +921,9 @@ ErrHandler:
 
 End Function
 '수정
-Public Function Update(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Taxinvoice As PBTaxinvoice, Optional writeSpecification As Boolean = False, Optional UserID As String = "") As PBResponse
+Public Function Update(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Taxinvoice As PBTaxinvoice, Optional writeSpecification As Boolean = False, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
 
@@ -943,7 +943,7 @@ On Error GoTo ErrHandler
     
     postdata = m_Linkhub.toString(tmpDic)
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                     getSession_token(CorpNum), _
                                     "PATCH", _
                                     postdata, _
@@ -962,9 +962,9 @@ ErrHandler:
 
 End Function
 '삭제
-Public Function Delete(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As PBResponse
+Public Function Delete(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -973,7 +973,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum), "DELETE", "", UserID)
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, getSession_token(CorpNum), "DELETE", "", UserID)
     
     Set Delete = New PBResponse
     
@@ -988,9 +988,9 @@ ErrHandler:
     Set Delete = Nothing
 End Function
 '발행
-Public Function Issue(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, memo As String, Optional emailSubject As String, Optional forceIssue As Boolean = False, Optional UserID As String = "") As PBResponse
+Public Function Issue(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, memo As String, Optional emailSubject As String, Optional forceIssue As Boolean = False, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1016,7 +1016,7 @@ On Error GoTo ErrHandler
     
     postdata = m_Linkhub.toString(tmp)
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum), "ISSUE", postdata, UserID)
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, getSession_token(CorpNum), "ISSUE", postdata, UserID)
     
     Set Issue = New PBResponse
     
@@ -1031,9 +1031,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '발행예정
-Public Function Send(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional memo As String, Optional emailSubject As String, Optional UserID As String = "") As PBResponse
+Public Function Send(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional emailSubject As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1046,7 +1046,7 @@ On Error GoTo ErrHandler
     
     postdata = "{""memo"":""" + memo + """, ""emailSubject"":""" + emailSubject + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, getSession_token(CorpNum), "SEND", postdata, UserID)
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, getSession_token(CorpNum), "SEND", postdata, UserID)
     
     Set Send = New PBResponse
     
@@ -1060,9 +1060,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '발행예정 취소
-Public Function CancelSend(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
+Public Function CancelSend(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1075,7 +1075,7 @@ On Error GoTo ErrHandler
     
     postdata = "{""memo"":""" + memo + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "CANCELSEND", postdata, UserID)
     
     Set CancelSend = New PBResponse
@@ -1090,9 +1090,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '발헁예정 승인
-Public Function Accept(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
+Public Function Accept(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1105,7 +1105,7 @@ On Error GoTo ErrHandler
     
     postdata = "{""memo"":""" + memo + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "ACCEPT", postdata, UserID)
     
     Set Accept = New PBResponse
@@ -1120,9 +1120,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '발행예정 거부
-Public Function Deny(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
+Public Function Deny(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1135,7 +1135,7 @@ On Error GoTo ErrHandler
     
     postdata = "{""memo"":""" + memo + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "DENY", postdata, UserID)
     
     Set Deny = New PBResponse
@@ -1150,9 +1150,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '발행 취소
-Public Function CancelIssue(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
+Public Function CancelIssue(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1165,7 +1165,7 @@ On Error GoTo ErrHandler
     
     postdata = "{""memo"":""" + memo + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "CANCELISSUE", postdata, UserID)
     
     Set CancelIssue = New PBResponse
@@ -1209,9 +1209,9 @@ ErrHandler:
 End Function
 
 '역)발행요청
-Public Function Request(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
+Public Function Request(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1224,7 +1224,7 @@ On Error GoTo ErrHandler
     
     postdata = "{""memo"":""" + memo + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "REQUEST", postdata, UserID)
     
     Set Request = New PBResponse
@@ -1239,9 +1239,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '역)발행요청 취소
-Public Function CancelRequest(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
+Public Function CancelRequest(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1254,7 +1254,7 @@ On Error GoTo ErrHandler
     
     postdata = "{""memo"":""" + memo + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "CANCELREQUEST", postdata, UserID)
     
     Set CancelRequest = New PBResponse
@@ -1269,9 +1269,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '역)발행요청 거부
-Public Function Refuse(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
+Public Function Refuse(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1284,7 +1284,7 @@ On Error GoTo ErrHandler
     
     postdata = "{""memo"":""" + memo + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "REFUSE", postdata, UserID)
     
     Set Refuse = New PBResponse
@@ -1300,9 +1300,9 @@ ErrHandler:
 End Function
 
 '국세청 전송
-Public Function SendToNTS(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As PBResponse
+Public Function SendToNTS(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1311,7 +1311,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "NTS", "", UserID)
     
     Set SendToNTS = New PBResponse
@@ -1326,9 +1326,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '이메일 재전송
-Public Function SendEmail(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Receiver As String, Optional UserID As String = "") As PBResponse
+Public Function SendEmail(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Receiver As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1341,7 +1341,7 @@ On Error GoTo ErrHandler
     
     postdata = "{""receiver"":""" + Receiver + """}"
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "EMAIL", postdata, UserID)
     
     Set SendEmail = New PBResponse
@@ -1356,9 +1356,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '문자재선송
-Public Function SendSMS(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Sender As String, Receiver As String, Contents As String, Optional UserID As String = "") As PBResponse
+Public Function SendSMS(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Sender As String, Receiver As String, Contents As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1379,7 +1379,7 @@ On Error GoTo ErrHandler
     
     postdata = m_Linkhub.toString(T)
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "SMS", postdata, UserID)
     
     Set SendSMS = New PBResponse
@@ -1394,9 +1394,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '팩스 재전송
-Public Function SendFax(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Sender As String, Receiver As String, Optional UserID As String = "") As PBResponse
+Public Function SendFax(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Sender As String, Receiver As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1416,7 +1416,7 @@ On Error GoTo ErrHandler
     
     postdata = m_Linkhub.toString(T)
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "FAX", postdata, UserID)
     
     Set SendFax = New PBResponse
@@ -1431,9 +1431,9 @@ ErrHandler:
     m_LastErrMessage = Err.Description
 End Function
 '상태/요약정보 확인
-Public Function GetInfo(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As PBTIInfo
+Public Function GetInfo(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBTIInfo
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1442,7 +1442,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey, _
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), UserID)
     
     Set GetInfo = New PBTIInfo
@@ -1500,7 +1500,7 @@ ErrHandler:
     Set GetInfos = Nothing
 End Function
 '세금계산서 목록조회
-Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, state As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "", Optional issueType As Collection = Null, Optional regType As Collection = Null)
+Public Function Search(CorpNum As String, KeyType As MgtKeyType, DType As String, SDate As String, EDate As String, state As Collection, TType As Collection, taxType As Collection, LateOnly As String, Page As Integer, PerPage As Integer, Order As String, Optional TaxRegIDType As String, Optional TaxRegID As String, Optional TaxRegIDYN As String, Optional QString As String, Optional UserID As String = "", Optional interOPYN As String = "", Optional issueType As Collection = Null, Optional regType As Collection = Null, Optional closeDownState As Collection = Null, Optional mgtKey As String = "")
 On Error GoTo ErrHandler
     Dim result As Variant
     Dim strKeyType As String
@@ -1565,6 +1565,13 @@ On Error GoTo ErrHandler
         Next
     End If
     
+    If Not closeDownState Is Nothing Then
+        uri = uri + "&CloseDownState="
+        For i = 1 To closeDownState.Count
+            uri = uri + closeDownState(i) + ","
+        Next
+    End If
+    
     If IsNull(LateOnly) = False Then
         uri = uri + "&LateOnly=" + LateOnly
     End If
@@ -1583,6 +1590,10 @@ On Error GoTo ErrHandler
     
     If QString <> "" Then
         uri = uri + "&QString=" + URLEncode(QString)
+    End If
+    
+    If mgtKey <> "" Then
+        uri = uri + "&MgtKey=" + URLEncode(mgtKey)
     End If
     
     If interOPYN <> "" Then
@@ -1613,9 +1624,9 @@ ErrHandler:
     
 End Function
 '상세정보 확인
-Public Function GetDetailInfo(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As PBTaxinvoice
+Public Function GetDetailInfo(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBTaxinvoice
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1624,7 +1635,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "?Detail", _
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "?Detail", _
                                 getSession_token(CorpNum), UserID)
     
     Set GetDetailInfo = New PBTaxinvoice
@@ -1641,9 +1652,9 @@ ErrHandler:
     Set GetDetailInfo = Nothing
 End Function
 '팝업URL 확인
-Public Function GetPopUpURL(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As String
+Public Function GetPopUpURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1652,7 +1663,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "?TG=POPUP", _
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "?TG=POPUP", _
                                 getSession_token(CorpNum), UserID)
     
     GetPopUpURL = result.Item("url")
@@ -1663,9 +1674,9 @@ ErrHandler:
     GetPopUpURL = ""
 End Function
 '팝업URL (메뉴/버튼 제외)
-Public Function GetViewURL(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As String
+Public Function GetViewURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1674,7 +1685,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "?TG=VIEW", _
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "?TG=VIEW", _
                                 getSession_token(CorpNum), UserID)
     
     GetViewURL = result.Item("url")
@@ -1686,9 +1697,9 @@ ErrHandler:
 End Function
 
 '인쇄 URL확인
-Public Function GetPrintURL(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As String
+Public Function GetPrintURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1697,7 +1708,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "?TG=PRINT", _
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "?TG=PRINT", _
                                 getSession_token(CorpNum), UserID)
     
     GetPrintURL = result.Item("url")
@@ -1708,9 +1719,9 @@ ErrHandler:
     GetPrintURL = ""
 End Function
 '공급받는자 인쇄 URL확인
-Public Function GetEPrintURL(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As String
+Public Function GetEPrintURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1719,7 +1730,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "?TG=EPRINT", _
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "?TG=EPRINT", _
                                 getSession_token(CorpNum), UserID)
     
     GetEPrintURL = result.Item("url")
@@ -1731,9 +1742,9 @@ ErrHandler:
 End Function
 
 '메일 URL확인
-Public Function GetMailURL(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As String
+Public Function GetMailURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1742,7 +1753,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "?TG=MAIL", _
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "?TG=MAIL", _
                                 getSession_token(CorpNum), UserID)
     
     GetMailURL = result.Item("url")
@@ -1782,9 +1793,9 @@ ErrHandler:
 End Function
 
 '문서이력확인
-Public Function GetLogs(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As Collection
+Public Function GetLogs(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As Collection
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1793,7 +1804,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "/Logs", _
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "/Logs", _
                                 getSession_token(CorpNum), UserID)
     
     Set GetLogs = New Collection
@@ -1817,9 +1828,9 @@ ErrHandler:
     Set GetLogs = Nothing
 End Function
 '파일 첨부
-Public Function AttachFile(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, FilePath As String, Optional UserID As String = "") As PBResponse
+Public Function AttachFile(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, FilePath As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1828,7 +1839,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpPOST_File("/Taxinvoice/" + strKeyType + "/" + MgtKey + "/Files", _
+    Set result = httpPOST_File("/Taxinvoice/" + strKeyType + "/" + mgtKey + "/Files", _
                         getSession_token(CorpNum), "", FilePath, UserID)
          
     Set AttachFile = New PBResponse
@@ -1842,9 +1853,9 @@ ErrHandler:
     Set AttachFile = Nothing
 End Function
 '첨부파일 목록 확인
-Public Function GetFiles(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, Optional UserID As String = "") As Collection
+Public Function GetFiles(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As Collection
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1853,7 +1864,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + MgtKey + "/Files", _
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "/Files", _
                                 getSession_token(CorpNum), UserID)
     
     Set GetFiles = New Collection
@@ -1877,9 +1888,9 @@ ErrHandler:
     Set GetFiles = Nothing
 End Function
 '첨부파일 삭제
-Public Function DeleteFile(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, FileID As String, Optional UserID As String = "") As PBResponse
+Public Function DeleteFile(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, FileID As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1892,7 +1903,7 @@ On Error GoTo ErrHandler
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + MgtKey + "/Files/" + FileID, _
+    Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey + "/Files/" + FileID, _
                                     getSession_token(CorpNum), "DELETE", "", UserID)
     
     Set DeleteFile = New PBResponse
@@ -1933,9 +1944,9 @@ ErrHandler:
     Set GetEmailPublicKeys = Nothing
 End Function
 '전자명세서 첨부
-Public Function AttachStatement(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, SubItemCode As Integer, SubMgtKey As String) As PBResponse
+Public Function AttachStatement(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, SubItemCode As Integer, SubMgtKey As String) As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1954,7 +1965,7 @@ On Error GoTo ErrHandler
         
     postdata = m_Linkhub.toString(tmp)
     
-    Set result = httpPOST("/Taxinvoice/" + strKeyType + "/" + MgtKey + "/AttachStmt", getSession_token(CorpNum), postdata)
+    Set result = httpPOST("/Taxinvoice/" + strKeyType + "/" + mgtKey + "/AttachStmt", getSession_token(CorpNum), postdata)
     Set AttachStatement = New PBResponse
     
     AttachStatement.code = result.Item("code")
@@ -1968,9 +1979,9 @@ ErrHandler:
     Set AttachStatement = Nothing
 End Function
 '전자명세서 첨부해제
-Public Function DetachStatement(CorpNum As String, KeyType As MgtKeyType, MgtKey As String, SubItemCode As Integer, SubMgtKey As String) As PBResponse
+Public Function DetachStatement(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, SubItemCode As Integer, SubMgtKey As String) As PBResponse
 On Error GoTo ErrHandler
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -1989,7 +2000,7 @@ On Error GoTo ErrHandler
         
     postdata = m_Linkhub.toString(tmp)
     
-    Set result = httpPOST("/Taxinvoice/" + strKeyType + "/" + MgtKey + "/DetachStmt", getSession_token(CorpNum), postdata)
+    Set result = httpPOST("/Taxinvoice/" + strKeyType + "/" + mgtKey + "/DetachStmt", getSession_token(CorpNum), postdata)
     Set DetachStatement = New PBResponse
     
     DetachStatement.code = result.Item("code")
@@ -2004,7 +2015,7 @@ ErrHandler:
 End Function
 
 '문서관리번호 할당
-Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, itemKey As String, MgtKey As String, Optional UserID As String = "") As PBResponse
+Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, itemKey As String, mgtKey As String, Optional UserID As String = "") As PBResponse
     On Error GoTo ErrHandler
 
     Dim postdata As String
@@ -2013,7 +2024,7 @@ Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, itemKey A
         Err.Raise -99999999, "POPBILL", "아이템키(itemKey)가 올바르지 않습니다."
     End If
     
-    If MgtKey = "" Then
+    If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
     End If
     
@@ -2022,7 +2033,7 @@ Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, itemKey A
     
     strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
     
-    postdata = "MgtKey=" + MgtKey
+    postdata = "MgtKey=" + mgtKey
     
     
     Set result = httpPOST_override("/Taxinvoice/" + itemKey + "/" + strKeyType, _
