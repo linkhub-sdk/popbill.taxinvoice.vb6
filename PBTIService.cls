@@ -1718,6 +1718,28 @@ ErrHandler:
     m_LastErrMessage = Err.Description
     GetPrintURL = ""
 End Function
+
+Public Function GetPDFURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
+On Error GoTo ErrHandler
+    If mgtKey = "" Then
+        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+    End If
+    
+    Dim result As Variant
+    Dim strKeyType As String
+    
+    strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
+    
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "?TG=PDF", _
+                                getSession_token(CorpNum), UserID)
+    
+    GetPDFURL = result.Item("url")
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    GetPDFURL = ""
+End Function
 '공급받는자 인쇄 URL확인
 Public Function GetEPrintURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
