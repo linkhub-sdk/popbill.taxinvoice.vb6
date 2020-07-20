@@ -117,7 +117,6 @@ Public Function toDictionary() As Variant
     
     toDictionary.Add "chargeDirection", chargeDirection
     toDictionary.Add "issueType", issueType
-    toDictionary.Add "issueTiming", issueTiming
     toDictionary.Add "taxType", taxType
     toDictionary.Add "invoicerCorpNum", invoicerCorpNum
     toDictionary.Add "invoicerMgtKey", invoicerMgtKey
@@ -236,7 +235,6 @@ Public Sub fromDictionary(dic As Variant)
     writeDate = dic.Item("writeDate")
     chargeDirection = dic.Item("chargeDirection")
     issueType = dic.Item("issueType")
-    issueTiming = dic.Item("issueTiming")
     taxType = dic.Item("taxType")
     
     invoicerCorpNum = dic.Item("invoicerCorpNum")
