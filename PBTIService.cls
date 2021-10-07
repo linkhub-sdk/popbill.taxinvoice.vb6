@@ -1448,7 +1448,7 @@ ErrHandler:
 End Function
 
 '국세청 전송
-Public Function SendToNTS(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBResponse
+Public Function sendToNTS(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
         Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
@@ -1462,10 +1462,10 @@ On Error GoTo ErrHandler
     Set result = httpPOST_override("/Taxinvoice/" + strKeyType + "/" + mgtKey, _
                                 getSession_token(CorpNum), "NTS", "", UserID)
     
-    Set SendToNTS = New PBResponse
+    Set sendToNTS = New PBResponse
     
-    SendToNTS.code = result.Item("code")
-    SendToNTS.message = result.Item("message")
+    sendToNTS.code = result.Item("code")
+    sendToNTS.message = result.Item("message")
     
     Exit Function
     
@@ -2301,6 +2301,26 @@ ErrHandler:
     m_LastErrCode = Err.Number
     m_LastErrMessage = Err.Description
     Set UpdateEmailConfig = Nothing
+End Function
+
+'국세청 전송 옵션 설정 상태 확인
+Public Function GetSendToNTSConfig(CorpNum As String, Optional UserID As String = "") As PBSendToNTSConfig
+    On Error GoTo ErrHandler
+    
+    Dim result As Variant
+    
+    Set result = httpGET("/Taxinvoice/SendToNTSConfig", getSession_token(CorpNum), UserID)
+    
+    Set GetSendToNTSConfig = New PBSendToNTSConfig
+    
+    GetSendToNTSConfig.sendToNTS = result.Item("sendToNTS")
+    
+    Exit Function
+    
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set GetSendToNTSConfig = Nothing
 End Function
 
 '공인인증서 유효성 확인
