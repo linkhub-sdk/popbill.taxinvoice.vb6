@@ -24,7 +24,7 @@ Option Explicit
 ' Author : Kim Seongjun (pallet027@gmail.com)
 ' Written : 2014-04-22
 ' Contributor : Jeong Yohan (code@linkhub.co.kr)
-' Updated : 2021-09-14
+' Updated : 2021-10-07
 '
 ' Thanks for your interest.
 '=================================================================================
@@ -46,6 +46,7 @@ Private m_IsTest As Boolean
 Private m_IPRestrictOnOff As Boolean
 Private m_UseStaticIP As Boolean
 Private m_UseGAIP As Boolean
+Private m_UseLocalTimeYN As Boolean
 Private m_Linkhub As Linkhub
 Private m_scope As New Collection
 Private m_LastErrCode As Long
@@ -192,6 +193,9 @@ End Property
 Public Property Let UseGAIP(ByVal value As Boolean)
     m_UseGAIP = value
 End Property
+Public Property Let UseLocalTimeYN(ByVal value As Boolean)
+    m_UseLocalTimeYN = value
+End Property
 '초기화
 Public Sub Initialize(LinkID As String, SecretKey As String)
     Set m_Linkhub = New Linkhub
@@ -207,6 +211,7 @@ Public Sub Initialize(LinkID As String, SecretKey As String)
     m_IPRestrictOnOff = True
     m_UseStaticIP = False
     m_UseGAIP = False
+    m_UseLocalTimeYN = False
 End Sub
 
 Private Function getTargetURL() As String
@@ -234,13 +239,13 @@ Private Function getSession_token(CorpNum As String) As String
         refresh = True
     Else
         Dim utcnow As String
-        utcnow = m_Linkhub.GetTime(m_UseStaticIP, m_UseGAIP)
+        utcnow = m_Linkhub.GetTime(m_UseStaticIP, m_UseGAIP, m_UseLocalTimeYN)
         refresh = m_Token.expiration < utcnow
     End If
     
     If refresh Then
     
-        Set m_Token = m_Linkhub.getToken(IIf(m_IsTest, ServiceID_TEST, ServiceID_REAL), CorpNum, m_scope, IIf(m_IPRestrictOnOff, "", "*"), m_UseStaticIP, m_UseGAIP)
+        Set m_Token = m_Linkhub.getToken(IIf(m_IsTest, ServiceID_TEST, ServiceID_REAL), CorpNum, m_scope, IIf(m_IPRestrictOnOff, "", "*"), m_UseStaticIP, m_UseGAIP, m_UseLocalTimeYN)
         
         If m_Token Is Nothing Then
             Err.Raise m_Linkhub.LastErrCode, "POPBILL", m_Linkhub.LastErrMessage
@@ -353,6 +358,57 @@ Private Function httpPOST_override(url As String, BearerToken As String, overrid
     Set winhttp1 = Nothing
     
     Set httpPOST_override = m_Linkhub.parse(Response)
+
+End Function
+
+Private Function httpPOST_Bulk(url As String, BearerToken As String, override As String, submitID As String, postdata As String, Optional UserID As String) As Variant
+     
+    Dim winhttp1
+    
+    Set winhttp1 = CreateObject("MSXML2.XMLHTTP.6.0")
+    Call winhttp1.Open("POST", getTargetURL() + url, False)
+    Call winhttp1.setRequestHeader("x-pb-version", APIVersion)
+    Call winhttp1.setRequestHeader("Accept-Encoding", "gzip,deflate")
+    Call winhttp1.setRequestHeader("x-pb-message-digest", m_Linkhub.Encode(m_Linkhub.SHA1(m_Linkhub.ToUTF8(postdata)), edfBase64, efNoFolding) + Chr(10))
+    
+    If BearerToken <> "" Then
+        Call winhttp1.setRequestHeader("Authorization", "Bearer " + BearerToken)
+    End If
+    
+    If submitID <> "" Then
+        Call winhttp1.setRequestHeader("x-pb-submit-id", submitID)
+    End If
+    
+    If override <> "" Then
+        Call winhttp1.setRequestHeader("X-HTTP-Method-Override", override)
+    End If
+    
+    If UserID <> "" Then
+        Call winhttp1.setRequestHeader("x-pb-userid", UserID)
+    End If
+    
+    Call winhttp1.setRequestHeader("Content-Type", "Application/json")
+    
+    winhttp1.Send (postdata)
+        
+    Dim Response As String
+    Response = winhttp1.responseText
+       
+    Dim parsedDic As Object
+    
+    If winhttp1.Status <> 200 Then
+    
+        Set parsedDic = m_Linkhub.parse(Response)
+        
+        Err.Raise parsedDic.Item("code"), "POPBILL", IIf(IsNull(parsedDic.Item("message")), "Null Exception", parsedDic.Item("message"))
+        
+        Exit Function
+        
+    End If
+    
+    Set winhttp1 = Nothing
+    
+    Set httpPOST_Bulk = m_Linkhub.parse(Response)
 
 End Function
 
@@ -912,7 +968,76 @@ ErrHandler:
     m_LastErrMessage = Err.Description
     Set RegistIssue = Nothing
 End Function
+'초대량 발행 접수
+Public Function bulkSubmit(CorpNum As String, submitID As String, taxinvoiceList As Collection, forceIssue As Boolean, Optional UserID As String = "") As PBTIBulkResponse
+    On Error GoTo ErrHandler
+    
+    Dim result As Variant
+    
+    If submitID = "" Then
+        Err.Raise -99999999, "POPBILL", "제출아이디가 입력되지 않았습니다.."
+    End If
+    
+    If taxinvoiceList.Count = 0 Or IsEmpty(taxinvoiceList) Then
+        Err.Raise -99999999, "POPBILL", "세금계산서 정보가 입력되지 않았습니다."
+    End If
+    
+    Dim pbTIBulkSubmit As New pbTIBulkSubmit
+    
+    pbTIBulkSubmit.forceIssue = forceIssue
+    
+    Dim invoice As PBTaxinvoice
 
+    For Each invoice In taxinvoiceList
+    
+        pbTIBulkSubmit.invoices.Add invoice
+        
+    Next
+    
+    Dim tmpDic As Variant
+    Set tmpDic = pbTIBulkSubmit.toDictionary
+    
+    Dim postdata As String
+    
+    postdata = m_Linkhub.toString(tmpDic)
+    
+    Set result = httpPOST_Bulk("/Taxinvoice", getSession_token(CorpNum), "BULKISSUE", submitID, postdata, UserID)
+    
+    Set bulkSubmit = New PBTIBulkResponse
+    
+    bulkSubmit.code = result.Item("code")
+    bulkSubmit.message = result.Item("message")
+    bulkSubmit.receiptID = result.Item("receiptID")
+    
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set bulkSubmit = Nothing
+End Function
+'초대량 접수결과 확인
+Public Function GetBulkResult(CorpNum As String, submitID As String, Optional UserID As String = "") As PBTIBulkTaxinvoiceResult
+    On Error GoTo ErrHandler
+    
+    Dim result As Variant
+    
+    If submitID = "" Then
+        Err.Raise -99999999, "POPBILL", "제출아이디가 입력되지 않았습니다.."
+    End If
+    
+    Set result = httpGET("/Taxinvoice/BULK/" + submitID + "/State", getSession_token(CorpNum), UserID)
+    
+    Set GetBulkResult = New PBTIBulkTaxinvoiceResult
+    
+    GetBulkResult.fromDictionary result
+    
+    Exit Function
+    
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set GetBulkResult = Nothing
+End Function
 '임시저장
 Public Function Register(CorpNum As String, Taxinvoice As PBTaxinvoice, Optional writeSpecification As Boolean = False, Optional UserID As String = "") As PBResponse
     On Error GoTo ErrHandler
@@ -2203,3 +2328,4 @@ ErrHandler:
     m_LastErrMessage = Err.Description
     Set CheckCertValidation = Nothing
 End Function
+
