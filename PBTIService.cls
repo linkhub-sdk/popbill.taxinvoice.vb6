@@ -53,7 +53,7 @@ Private m_LastErrCode As Long
 Private m_LastErrMessage As String
 Private m_token_Dic
 
-'관리번호 형태
+'문서번호 형태
 Public Enum MgtKeyType
     SELL '매출
     BUY '매입
@@ -913,7 +913,7 @@ End Function
 Public Function checkMgtKeyInUse(CorpNum As String, KeyType As MgtKeyType, mgtKey As String) As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1072,7 +1072,7 @@ End Function
 Public Function Update(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Taxinvoice As PBTaxinvoice, Optional writeSpecification As Boolean = False, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
 
     Dim result As Variant
@@ -1113,7 +1113,7 @@ End Function
 Public Function Delete(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1139,7 +1139,7 @@ End Function
 Public Function Issue(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, memo As String, Optional emailSubject As String, Optional forceIssue As Boolean = False, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1182,7 +1182,7 @@ End Function
 Public Function Send(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional emailSubject As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1211,7 +1211,7 @@ End Function
 Public Function CancelSend(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1241,7 +1241,7 @@ End Function
 Public Function Accept(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1271,7 +1271,7 @@ End Function
 Public Function Deny(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1301,7 +1301,7 @@ End Function
 Public Function CancelIssue(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1360,7 +1360,7 @@ End Function
 Public Function Request(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1390,7 +1390,7 @@ End Function
 Public Function CancelRequest(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1420,7 +1420,7 @@ End Function
 Public Function Refuse(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional memo As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1451,7 +1451,7 @@ End Function
 Public Function sendToNTS(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1477,7 +1477,7 @@ End Function
 Public Function SendEmail(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Receiver As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1507,7 +1507,7 @@ End Function
 Public Function SendSMS(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Sender As String, Receiver As String, Contents As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1545,7 +1545,7 @@ End Function
 Public Function SendFax(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Sender As String, Receiver As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1582,7 +1582,7 @@ End Function
 Public Function GetInfo(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBTIInfo
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1611,7 +1611,7 @@ End Function
 Public Function GetInfos(CorpNum As String, KeyType As MgtKeyType, MgtKeyList As Collection, Optional UserID As String = "") As Collection
 On Error GoTo ErrHandler
     If MgtKeyList Is Nothing Or MgtKeyList.Count = 0 Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1775,7 +1775,7 @@ End Function
 Public Function GetDetailInfo(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBTaxinvoice
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1803,7 +1803,7 @@ End Function
 Public Function GetPopUpURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1825,7 +1825,7 @@ End Function
 Public Function GetViewURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1848,7 +1848,7 @@ End Function
 Public Function GetPrintURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1892,7 +1892,7 @@ End Function
 Public Function GetPDFURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1914,7 +1914,7 @@ End Function
 Public Function GetEPrintURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1937,7 +1937,7 @@ End Function
 Public Function GetMailURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1959,7 +1959,7 @@ End Function
 Public Function GetMassPrintURL(CorpNum As String, KeyType As MgtKeyType, MgtKeyList As Collection, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
     If MgtKeyList Is Nothing Or MgtKeyList.Count = 0 Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -1988,7 +1988,7 @@ End Function
 Public Function GetLogs(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As Collection
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -2023,7 +2023,7 @@ End Function
 Public Function AttachFile(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, FilePath As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -2048,7 +2048,7 @@ End Function
 Public Function GetFiles(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As Collection
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -2083,7 +2083,7 @@ End Function
 Public Function DeleteFile(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, FileID As String, Optional UserID As String = "") As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
      If FileID = "" Then
@@ -2139,7 +2139,7 @@ End Function
 Public Function AttachStatement(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, SubItemCode As Integer, SubMgtKey As String) As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -2174,7 +2174,7 @@ End Function
 Public Function DetachStatement(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, SubItemCode As Integer, SubMgtKey As String) As PBResponse
 On Error GoTo ErrHandler
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
@@ -2206,7 +2206,7 @@ ErrHandler:
     Set DetachStatement = Nothing
 End Function
 
-'문서관리번호 할당
+'문서번호 할당
 Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, itemKey As String, mgtKey As String, Optional UserID As String = "") As PBResponse
     On Error GoTo ErrHandler
 
@@ -2217,7 +2217,7 @@ Public Function AssignMgtKey(CorpNum As String, KeyType As MgtKeyType, itemKey A
     End If
     
     If mgtKey = "" Then
-        Err.Raise -99999999, "POPBILL", "관리번호가 입력되지 않았습니다."
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
     End If
     
     Dim result As Variant
