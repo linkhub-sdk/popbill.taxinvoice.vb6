@@ -264,12 +264,12 @@ Private Function getSession_token(CorpNum As String) As String
 
 End Function
 
-Private Function httpGET(url As String, BearerToken As String, Optional UserID As String) As Variant
+Private Function httpGET(URL As String, BearerToken As String, Optional UserID As String) As Variant
      
     Dim winhttp1
     
     Set winhttp1 = CreateObject("MSXML2.XMLHTTP.6.0")
-    Call winhttp1.Open("GET", getTargetURL() + url, False)
+    Call winhttp1.Open("GET", getTargetURL() + URL, False)
     
     Call winhttp1.setRequestHeader("Authorization", "Bearer " + BearerToken)
     Call winhttp1.setRequestHeader("x-pb-version", APIVersion)
@@ -303,18 +303,18 @@ Private Function httpGET(url As String, BearerToken As String, Optional UserID A
 
 End Function
 
-Private Function httpPOST(url As String, BearerToken As String, postData As String, Optional UserID As String) As Variant
-    Set httpPOST = httpPOST_override(url, BearerToken, "", postData, UserID)
+Private Function httpPOST(URL As String, BearerToken As String, postData As String, Optional UserID As String) As Variant
+    Set httpPOST = httpPOST_override(URL, BearerToken, "", postData, UserID)
     
 End Function
 
 
-Private Function httpPOST_override(url As String, BearerToken As String, override As String, postData As String, Optional UserID As String, Optional contentstype As String = "") As Variant
+Private Function httpPOST_override(URL As String, BearerToken As String, override As String, postData As String, Optional UserID As String, Optional contentstype As String = "") As Variant
      
     Dim winhttp1
     
     Set winhttp1 = CreateObject("MSXML2.XMLHTTP.6.0")
-    Call winhttp1.Open("POST", getTargetURL() + url, False)
+    Call winhttp1.Open("POST", getTargetURL() + URL, False)
     Call winhttp1.setRequestHeader("x-pb-version", APIVersion)
     Call winhttp1.setRequestHeader("Accept-Encoding", "gzip,deflate")
     
@@ -361,12 +361,12 @@ Private Function httpPOST_override(url As String, BearerToken As String, overrid
 
 End Function
 
-Private Function httpPOST_Bulk(url As String, BearerToken As String, override As String, submitID As String, postData As String, Optional UserID As String) As Variant
+Private Function httpPOST_Bulk(URL As String, BearerToken As String, override As String, submitID As String, postData As String, Optional UserID As String) As Variant
      
     Dim winhttp1
     
     Set winhttp1 = CreateObject("MSXML2.XMLHTTP.6.0")
-    Call winhttp1.Open("POST", getTargetURL() + url, False)
+    Call winhttp1.Open("POST", getTargetURL() + URL, False)
     Call winhttp1.setRequestHeader("x-pb-version", APIVersion)
     Call winhttp1.setRequestHeader("Accept-Encoding", "gzip,deflate")
     Call winhttp1.setRequestHeader("x-pb-message-digest", m_Linkhub.Encode(m_Linkhub.SHA1(m_Linkhub.ToUTF8(postData)), edfBase64, efNoFolding) + Chr(10))
@@ -420,14 +420,14 @@ Private Function GetOnlyFileName(ByVal FilePath As String) As String
 
 End Function
 
-Private Function httpPOST_File(url As String, BearerToken As String, postData As String, FilePath As String, Optional UserID As String) As Variant
+Private Function httpPOST_File(URL As String, BearerToken As String, postData As String, FilePath As String, Optional UserID As String) As Variant
      
   Dim winhttp1
     Dim boundary As String
     boundary = "---------------------popbill"
     
     Set winhttp1 = CreateObject("MSXML2.XMLHTTP.6.0")
-    Call winhttp1.Open("POST", getTargetURL() + url, False)
+    Call winhttp1.Open("POST", getTargetURL() + URL, False)
     Call winhttp1.setRequestHeader("x-pb-version", APIVersion)
     Call winhttp1.setRequestHeader("Accept-Encoding", "gzip,deflate")
     
@@ -601,7 +601,7 @@ On Error GoTo ErrHandler
     
     Dim result As Variant
     
-    Set result = httpPOST("/IDs/New", getSession_token(CorpNum), postData)
+    Set result = httpPOST("/IDs/New", getSession_token(CorpNum), postData, UserID)
     
     Set RegistContact = New PBResponse
     
