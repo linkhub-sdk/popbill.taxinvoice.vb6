@@ -14,6 +14,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Public id               As String
+Public Password         As String
 Public pwd              As String
 Public personName       As String
 Public tel              As String
@@ -24,10 +25,11 @@ Public regDT            As String
 Public searchAllAllowYN As Boolean
 Public mgrYN            As Boolean
 Public state            As Integer
-
+Public searchRole       As Integer
 
 Public Sub fromDictionary(dic As Variant)
     id = dic.Item("id")
+    Password = dic.Item("Password")
     pwd = dic.Item("pwd")
     personName = dic.Item("personName")
     tel = dic.Item("tel")
@@ -38,6 +40,5 @@ Public Sub fromDictionary(dic As Variant)
     searchAllAllowYN = CStr(dic.Item("searchAllAllowYN"))
     mgrYN = CStr(dic.Item("mgrYN"))
     state = dic.Item("state")
+    searchRole = dic.Item("searchRole")
 End Sub
-
-

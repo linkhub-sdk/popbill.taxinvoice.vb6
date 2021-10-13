@@ -15,14 +15,15 @@ Option Explicit
 
 Public LinkID          As String
 Public CorpNum         As String
-Public CEOName         As String
-Public CorpName        As String
-Public Addr            As String
+Public ceoname         As String
+Public corpName        As String
+Public addr            As String
 Public ZipCode         As String
-Public BizType         As String
-Public BizClass        As String
-Public ID              As String
-Public PWD             As String
+Public bizType         As String
+Public bizClass        As String
+Public id              As String
+Public pwd             As String
+Public Password        As String
 Public ContactName     As String
 Public ContactTEL      As String
 Public ContactHP       As String
