@@ -23,7 +23,7 @@ Option Explicit
 ' http://www.popbill.com
 ' Author : Kim Seongjun (pallet027@gmail.com)
 ' Written : 2014-04-22
-' Contributor : Jeong Yohan (code@linkhub.co.kr)
+' Contributor : Jeong Yohan (code@linkhubcorp.com)
 ' Updated : 2022-01-17
 '
 ' Thanks for your interest.
