@@ -24,7 +24,7 @@ Option Explicit
 ' Author : Kim Seongjun (pallet027@gmail.com)
 ' Written : 2014-04-22
 ' Contributor : Jeong Yohan (code@linkhub.co.kr)
-' Updated : 2021-10-07
+' Updated : 2022-01-17
 '
 ' Thanks for your interest.
 '=================================================================================
@@ -806,7 +806,7 @@ ErrHandler:
    GetSealURL = ""
 End Function
 
-'공인인증서 등록 URL
+'공동인증서 등록 URL
 Public Function GetTaxCertURL(CorpNum As String, UserID As String) As String
 On Error GoTo ErrHandler
    Dim result As Variant
@@ -2384,7 +2384,7 @@ ErrHandler:
     Set GetSendToNTSConfig = Nothing
 End Function
 
-'공인인증서 유효성 확인
+'공동인증서 유효성 확인
 Public Function CheckCertValidation(CorpNum As String, Optional UserID As String = "") As PBResponse
     On Error GoTo ErrHandler
     
