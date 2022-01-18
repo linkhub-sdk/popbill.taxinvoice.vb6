@@ -1030,7 +1030,7 @@ ErrHandler:
     Set RegistIssue = Nothing
 End Function
 '초대량 발행 접수
-Public Function BulkSubmit(CorpNum As String, submitID As String, taxinvoiceList As Collection, forceIssue As Boolean, Optional UserID As String = "") As PBTIBulkResponse
+Public Function BulkSubmit(CorpNum As String, submitID As String, taxinvoiceList As Collection, forceIssue As Boolean, Optional UserID As String = "") As PBBulkResponse
     On Error GoTo ErrHandler
     
     Dim result As Variant
@@ -1043,20 +1043,20 @@ Public Function BulkSubmit(CorpNum As String, submitID As String, taxinvoiceList
         Err.Raise -99999999, "POPBILL", "세금계산서 정보가 입력되지 않았습니다."
     End If
     
-    Dim pbTIBulkSubmit As New pbTIBulkSubmit
+    Dim PBBulkSubmit As New PBBulkSubmit
     
-    pbTIBulkSubmit.forceIssue = forceIssue
+    PBBulkSubmit.forceIssue = forceIssue
     
     Dim invoice As PBTaxinvoice
 
     For Each invoice In taxinvoiceList
     
-        pbTIBulkSubmit.invoices.Add invoice
+        PBBulkSubmit.invoices.Add invoice
         
     Next
     
     Dim tmpDic As Variant
-    Set tmpDic = pbTIBulkSubmit.toDictionary
+    Set tmpDic = PBBulkSubmit.toDictionary
     
     Dim postData As String
     
@@ -1064,7 +1064,7 @@ Public Function BulkSubmit(CorpNum As String, submitID As String, taxinvoiceList
     
     Set result = httpPOST_Bulk("/Taxinvoice", getSession_token(CorpNum), "BULKISSUE", submitID, postData, UserID)
     
-    Set BulkSubmit = New PBTIBulkResponse
+    Set BulkSubmit = New PBBulkResponse
     
     BulkSubmit.code = result.Item("code")
     BulkSubmit.message = result.Item("message")
@@ -1077,7 +1077,7 @@ ErrHandler:
     Set BulkSubmit = Nothing
 End Function
 '초대량 접수결과 확인
-Public Function GetBulkResult(CorpNum As String, submitID As String, Optional UserID As String = "") As PBTIBulkTaxinvoiceResult
+Public Function GetBulkResult(CorpNum As String, submitID As String, Optional UserID As String = "") As PBBulkTaxinvoiceResult
     On Error GoTo ErrHandler
     
     Dim result As Variant
@@ -1088,7 +1088,7 @@ Public Function GetBulkResult(CorpNum As String, submitID As String, Optional Us
     
     Set result = httpGET("/Taxinvoice/BULK/" + submitID + "/State", getSession_token(CorpNum), UserID)
     
-    Set GetBulkResult = New PBTIBulkTaxinvoiceResult
+    Set GetBulkResult = New PBBulkTaxinvoiceResult
     
     GetBulkResult.fromDictionary result
     

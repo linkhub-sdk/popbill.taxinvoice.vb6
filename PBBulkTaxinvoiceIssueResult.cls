@@ -6,7 +6,7 @@ BEGIN
   DataSourceBehavior  = 0  'vbNone
   MTSTransactionMode  = 0  'NotAnMTSObject
 END
-Attribute VB_Name = "PBTIBulkTaxinvoiceIssueResult"
+Attribute VB_Name = "PBBulkTaxinvoiceIssueResult"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
@@ -17,13 +17,13 @@ Option Explicit
 Public invoicerMgtKey      As String
 Public trusteeMgtKey       As String
 Public code                As String
-Public ntsconfirmNum       As String
+Public ntsConfirmNum       As String
 Public issueDT             As String
 
 Public Sub fromDictinary(dic As Variant)
     invoicerMgtKey = dic.Item("invoicerMgtKey")
     trusteeMgtKey = dic.Item("trusteeMgtKey")
     code = dic.Item("code")
-    ntsconfirmNum = dic.Item("ntsconfirmNum")
+    ntsConfirmNum = dic.Item("ntsconfirmNum")
     issueDT = dic.Item("issueDT")
 End Sub

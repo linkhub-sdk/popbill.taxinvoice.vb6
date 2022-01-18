@@ -6,7 +6,7 @@ BEGIN
   DataSourceBehavior  = 0  'vbNone
   MTSTransactionMode  = 0  'NotAnMTSObject
 END
-Attribute VB_Name = "PBTIBulkTaxinvoiceResult"
+Attribute VB_Name = "PBBulkTaxinvoiceResult"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
@@ -49,10 +49,10 @@ Public Sub fromDictionary(dic As Variant)
         Set issueResult = New Collection
         
         Dim T As Variant
-        Dim bulkTIIssueResult As PBTIBulkTaxinvoiceIssueResult
+        Dim bulkTIIssueResult As PBBulkTaxinvoiceIssueResult
         
         For Each T In tCollection
-            Set bulkTIIssueResult = New PBTIBulkTaxinvoiceIssueResult
+            Set bulkTIIssueResult = New PBBulkTaxinvoiceIssueResult
             
             bulkTIIssueResult.fromDictinary T
             issueResult.Add bulkTIIssueResult
