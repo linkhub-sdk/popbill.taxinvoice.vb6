@@ -1030,7 +1030,7 @@ ErrHandler:
     Set RegistIssue = Nothing
 End Function
 '초대량 발행 접수
-Public Function bulkSubmit(CorpNum As String, submitID As String, taxinvoiceList As Collection, forceIssue As Boolean, Optional UserID As String = "") As PBTIBulkResponse
+Public Function BulkSubmit(CorpNum As String, submitID As String, taxinvoiceList As Collection, forceIssue As Boolean, Optional UserID As String = "") As PBTIBulkResponse
     On Error GoTo ErrHandler
     
     Dim result As Variant
@@ -1064,17 +1064,17 @@ Public Function bulkSubmit(CorpNum As String, submitID As String, taxinvoiceList
     
     Set result = httpPOST_Bulk("/Taxinvoice", getSession_token(CorpNum), "BULKISSUE", submitID, postData, UserID)
     
-    Set bulkSubmit = New PBTIBulkResponse
+    Set BulkSubmit = New PBTIBulkResponse
     
-    bulkSubmit.code = result.Item("code")
-    bulkSubmit.message = result.Item("message")
-    bulkSubmit.receiptID = result.Item("receiptID")
+    BulkSubmit.code = result.Item("code")
+    BulkSubmit.message = result.Item("message")
+    BulkSubmit.receiptID = result.Item("receiptID")
     
     Exit Function
 ErrHandler:
     m_LastErrCode = Err.Number
     m_LastErrMessage = Err.Description
-    Set bulkSubmit = Nothing
+    Set BulkSubmit = Nothing
 End Function
 '초대량 접수결과 확인
 Public Function GetBulkResult(CorpNum As String, submitID As String, Optional UserID As String = "") As PBTIBulkTaxinvoiceResult
