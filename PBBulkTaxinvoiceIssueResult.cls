@@ -16,7 +16,7 @@ Option Explicit
 
 Public invoicerMgtKey      As String
 Public trusteeMgtKey       As String
-Public code                As String
+Public code                As Long
 Public ntsConfirmNum       As String
 Public issueDT             As String
 

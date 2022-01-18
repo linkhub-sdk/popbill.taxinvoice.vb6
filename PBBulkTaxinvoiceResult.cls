@@ -13,14 +13,14 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Public code                    As Integer
+Public code                    As Long
 Public message                 As String
 Public submitID                As String
-Public submitCount             As Integer
-Public successCount            As Integer
-Public failCount               As Integer
-Public txState                 As Integer
-Public txResultCode            As Integer
+Public submitCount             As Long
+Public successCount            As Long
+Public failCount               As Long
+Public txState                 As Long
+Public txResultCode            As Long
 Public txStartDT               As String
 Public txEndDT                 As String
 Public receiptDT               As String
