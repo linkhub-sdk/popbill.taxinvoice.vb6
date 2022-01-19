@@ -44,19 +44,21 @@ Public Sub fromDictionary(dic As Variant)
     
     Dim tCollection As Collection
     
-    Set tCollection = dic.Item("issueResult")
-    If (tCollection Is Nothing) = False Then
-        Set issueResult = New Collection
+    If dic.Exists("issueResult") Then
+        Set tCollection = dic.Item("issueResult")
+        If (tCollection Is Nothing) = False Then
+            Set issueResult = New Collection
         
-        Dim T As Variant
-        Dim bulkTIIssueResult As PBBulkTaxinvoiceIssueResult
+            Dim T As Variant
+            Dim bulkTIIssueResult As PBBulkTaxinvoiceIssueResult
         
-        For Each T In tCollection
-            Set bulkTIIssueResult = New PBBulkTaxinvoiceIssueResult
+            For Each T In tCollection
+                Set bulkTIIssueResult = New PBBulkTaxinvoiceIssueResult
             
-            bulkTIIssueResult.fromDictinary T
-            issueResult.Add bulkTIIssueResult
-        Next
-        
+                bulkTIIssueResult.fromDictinary T
+                issueResult.Add bulkTIIssueResult
+            Next
+        End If
     End If
+    
 End Sub
