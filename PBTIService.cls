@@ -1860,6 +1860,30 @@ ErrHandler:
     m_LastErrMessage = Err.Description
     Set GetDetailInfo = Nothing
 End Function
+'상세정보 확인(XML)
+Public Function GetXML(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As PBTaxinvoiceXML
+On Error GoTo ErrHandler
+    Dim result As Variant
+    Dim strKeyType As String
+
+    If mgtKey = "" Then
+        Err.Raise -99999999, "POPBILL", "문서번호가 입력되지 않았습니다."
+    End If
+    
+    strKeyType = IIf(KeyType = TRUSTEE, "TRUSTEE", IIf(KeyType = BUY, "BUY", "SELL"))
+    
+    Set result = httpGET("/Taxinvoice/" + strKeyType + "/" + mgtKey + "?XML", getSession_token(CorpNum), UserID)
+     
+    Set GetXML = New PBTaxinvoiceXML
+    
+    GetXML.fromDictionary result
+    
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set GetXML = Nothing
+End Function
 '팝업URL 확인
 Public Function GetPopUpURL(CorpNum As String, KeyType As MgtKeyType, mgtKey As String, Optional UserID As String = "") As String
 On Error GoTo ErrHandler
@@ -2382,6 +2406,24 @@ ErrHandler:
     m_LastErrCode = Err.Number
     m_LastErrMessage = Err.Description
     Set GetSendToNTSConfig = Nothing
+End Function
+
+' 인증서 정보 확인
+Public Function GetTaxCertInfo(CorpNum As String, Optional UserID As String = "") As PBTaxinvoiceCertificate
+    On Error GoTo ErrHandler
+    
+    Dim result As Variant
+    
+    Set result = httpGET("/Taxinvoice/Certificate", getSession_token(CorpNum), UserID)
+    
+    Set GetTaxCertInfo = New PBTaxinvoiceCertificate
+    GetTaxCertInfo.fromDictionary result
+    
+    Exit Function
+ErrHandler:
+    m_LastErrCode = Err.Number
+    m_LastErrMessage = Err.Description
+    Set GetTaxCertInfo = Nothing
 End Function
 
 '공동인증서 유효성 확인

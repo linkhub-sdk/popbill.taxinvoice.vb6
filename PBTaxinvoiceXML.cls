@@ -1,0 +1,27 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+  Persistable = 0  'NotPersistable
+  DataBindingBehavior = 0  'vbNone
+  DataSourceBehavior  = 0  'vbNone
+  MTSTransactionMode  = 0  'NotAnMTSObject
+END
+Attribute VB_Name = "PBTaxinvoiceXML"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Explicit
+
+Public code     As Long
+Public message        As String
+Public retObject      As String
+
+Public Sub fromDictionary(dic As Variant)
+    code = dic.Item("code")
+    message = dic.Item("message")
+    retObject = dic.Item("retObject")
+End Sub
+
+
+
