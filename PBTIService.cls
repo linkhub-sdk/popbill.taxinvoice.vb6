@@ -21,10 +21,10 @@ Option Explicit
 ' on system32 by default.
 '
 ' http://www.popbill.com
-' Author : Kim Seongjun (pallet027@gmail.com)
+' Author : Kim Seongjun
 ' Written : 2014-04-22
 ' Contributor : Jeong Yohan (code@linkhubcorp.com)
-' Updated : 2022-01-17
+' Updated : 2022-04-06
 '
 ' Thanks for your interest.
 '=================================================================================
